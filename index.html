@@ -73,7 +73,6 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
 .progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
-
 /* Стили для матрицы */
 footer {
     padding: 20px;
@@ -141,7 +140,6 @@ footer {
     <div class="cmd-wrap" id="cmd" tabindex="0"></div>
   </section>
 </main>
-
 <footer>
     <div class="matrix-container">
         <div class="matrix-dot" style="background-color: var(--accent);"></div>
@@ -155,7 +153,6 @@ footer {
         <div class="matrix-dot" style="background-color: var(--accent);"></div>
     </div>
 </footer>
-
 <script>
 // Автозапуск аудио при разрешении пользователя
 window.addEventListener('load',()=>{const audio=document.getElementById('bg-audio');audio.play().catch(()=>{});});
