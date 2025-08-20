@@ -15,62 +15,82 @@
     --muted: #9aa4b2;
     --glass: rgba(255,69,0,0.08);
     --shadow: 0 10px 30px rgba(255,69,0,0.15), 0 2px 10px rgba(0,0,0,0.5);
+    --red: #FF6666;
+    --green: #66FF66;
+    --blue: #66B2FF;
 }
 *{box-sizing:border-box}
 body{margin:0; font-family:'JetBrains Mono', monospace; color:var(--fg); background:var(--bg);}
 a{text-decoration:none; color:var(--fg);}
-header{display:flex; justify-content:space-between; align-items:center; padding:16px 32px; background:var(--bg-soft);}
+header{display:flex; justify-content:space-between; align-items:center; padding:16px 32px; background:var(--bg-soft); border-bottom:1px solid var(--accent);}
 .logo{font-weight:800; font-size:1.5rem; color:var(--accent);}
 .nav{display:flex; gap:16px;}
-.btn{padding:8px 12px; background:var(--glass); border:1px solid var(--accent); border-radius:8px; cursor:pointer;}
+.btn{padding:8px 12px; background:var(--glass); border:1px solid var(--accent); border-radius:8px; cursor:pointer; transition:all 0.2s;}
+.btn:hover{background:var(--accent); color:var(--bg-soft);}
 main{display:grid; grid-template-columns:2fr 1fr; gap:16px; padding:16px;}
 section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-shadow:var(--shadow);}
 .widgets{display:grid; gap:12px;}
 .widget{background:var(--bg); padding:12px; border-radius:12px; box-shadow:var(--shadow);}
 .cmd-wrap{background:#000; color:#dcdcdc; border-radius:12px; padding:12px; height:400px; overflow:auto; font-size:14px;}
-.line{white-space:pre-wrap;}
-.prompt{color:#dcdcdc;}
-.path{color:#9cdcfe;}
+.line{white-space:pre-wrap; font-family:'JetBrains Mono', monospace;}
+.prompt{color:var(--muted);}
+.path{color:var(--blue);}
+.success{color:var(--green);}
+.error{color:var(--red);}
 .cursor{display:inline-block; width:7px; height:1.2em; background:#dcdcdc; margin-left:1px; animation:blink 1s steps(2) infinite;}
 @keyframes blink{50%{opacity:0}}
-.widget input, .widget button{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
-#cortana-face{width:220px; height:220px; border-radius:50%; margin:16px auto; box-shadow:var(--shadow); background-image: url('cortana.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite;}
+.widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
+.widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
+#cortana-face{width:220px; height:220px; border-radius:50%; margin:16px auto; box-shadow:var(--shadow); background-image: url('https://media.tenor.com/u_L91V-77K8AAAAC/cortana-halo-5.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
+.progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
 </style>
 </head>
 <body>
 <audio id="bg-audio" autoplay loop><source src="1.mp3" type="audio/mpeg"></audio>
 <header>
-  <div class="logo">HACKPACK GOOD HAKER</div>
-  <div class="nav">
-    <button class="btn" data-page="home">Главная</button>
-    <button class="btn" data-page="widgets">Виджеты</button>
-    <button class="btn" id="btn-full">Полноэкранный</button>
-    <button class="btn" id="btn-copy">Копировать</button>
-  </div>
+  <div class="logo">HACKPACK GOOD HAKER</div>
+  <div class="nav">
+    <button class="btn" data-page="home">Главная</button>
+    <button class="btn" data-page="widgets">Виджеты</button>
+    <button class="btn" id="btn-full">Полноэкранный</button>
+    <button class="btn" id="btn-copy">Копировать</button>
+  </div>
 </header>
 <main>
-  <section class="page" id="home">
-    <h2>Главная страница</h2>
-    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
-    <div id="cortana-face"></div>
-  </section>
-  <section class="page" id="widgets" style="display:none;">
-    <h2>Виджеты</h2>
-    <div class="widgets">
-      <div class="widget"><b>Системная информация:</b><br>OS: Windows 10<br>Версия: 1.0</div>
-      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
-      <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
-      <div class="widget">
-        <b>Генератор паролей:</b><br>
-        <input type="number" id="pw-length" placeholder="Длина пароля" min="4" max="32">
-        <button id="gen-pw">Сгенерировать</button>
-        <button id="copy-pw">Скопировать пароль</button>
-        <div id="pw-output" style="margin-top:6px;"></div>
-      </div>
-    </div>
-    <div class="cmd-wrap" id="cmd" tabindex="0"></div>
-  </section>
+  <section class="page" id="home">
+    <h2>Главная страница</h2>
+    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
+    <div id="cortana-face"></div>
+  </section>
+  <section class="page" id="widgets" style="display:none;">
+    <h2>Виджеты</h2>
+    <div class="widgets">
+      <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
+      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
+      <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
+      <div class="widget">
+        <b>Генератор паролей:</b><br>
+        <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
+        <button id="gen-pw">Сгенерировать</button>
+        <button id="copy-pw">Скопировать</button>
+        <div id="pw-output" style="margin-top:6px;"></div>
+      </div>
+      <div class="widget">
+        <b>Шифрование Base64:</b><br>
+        <input type="text" id="b64-input" placeholder="Введите текст">
+        <button id="b64-encode">Зашифровать</button>
+        <button id="b64-decode">Расшифровать</button>
+        <div id="b64-output" style="margin-top:6px;"></div>
+      </div>
+      <div class="widget">
+        <b>Прогресс:</b>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+    <div class="cmd-wrap" id="cmd" tabindex="0"></div>
+  </section>
 </main>
 <script>
 // Автозапуск аудио при разрешении пользователя
@@ -89,35 +109,158 @@ document.querySelectorAll('.nav button[data-page]').forEach(b=>{
 const cmd=document.getElementById('cmd');
 const log=document.getElementById('cmd-log');
 let buffer='', caret=0, history=[], historyIndex=-1, cmdCount=0;
-const path=['C:','Users','Guest'];
-const fs={'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}};
+let path = localStorage.getItem('vfs-path') ? localStorage.getItem('vfs-path').split(',') : ['C:','Users','Guest'];
+let fs = JSON.parse(localStorage.getItem('vfs-fs')) || {'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}};
+function saveState(){localStorage.setItem('vfs-path',path.join(','));localStorage.setItem('vfs-fs',JSON.stringify(fs));}
 function joinPath(){return path.join('\\');}
-function print(text=''){const d=document.createElement('div');d.className='line';d.textContent=text;cmd.appendChild(d);cmd.scrollTop=cmd.scrollHeight;}
-function promptLine(){const l=document.createElement('div');l.className='line';l.id='current-line';l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;cmd.appendChild(l);renderBuffer();cmd.scrollTop=cmd.scrollHeight;}
-function renderBuffer(){document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret));document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret));}
+function print(text='',type='normal'){
+    const d=document.createElement('div');
+    d.className='line';
+    if(type!=='normal') d.className+=' '+type;
+    d.textContent=text;
+    cmd.appendChild(d);
+    cmd.scrollTop=cmd.scrollHeight;
+}
+function promptLine(){
+    const l=document.createElement('div');
+    l.className='line';
+    l.id='current-line';
+    l.innerHTML=`<span class="prompt">${joinPath()}</span>&gt; <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;
+    cmd.appendChild(l);
+    renderBuffer();
+    cmd.scrollTop=cmd.scrollHeight;
+}
+function renderBuffer(){
+    document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret));
+    document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret));
+}
 function clearScreen(){cmd.innerHTML='';}
 function parseArgs(s){return s.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)||[];}
+function getNode(arr){let n=fs;for(const p of arr){if(!n.hasOwnProperty(p))return null;n=n[p];}return n;}
 const commands={
-  help(){['HELP','DIR','CD [path]','CLS','ECHO [text]','TYPE [file]','IPCONFIG','PING host'].forEach(l=>print(l));},
-  cls(){clearScreen();},
-  echo(...a){print(a.join(' '));},
-  dir(){const node=getNode(path);if(!node)return;print('Ошибка');Object.keys(node).forEach(f=>print(f));},
-  cd(p){if(!p)return;const parts=p.split('\\');for(const part of parts){if(part==='..'&&path.length>1)path.pop();else if(getNode([...path,part]))path.push(part);}},
-  type(f){const n=getNode([...path,f]);if(typeof n==='string')n.split('\n').forEach(print);else print('Файл не найден');},
-  ipconfig(){print('IPv4:192.168.0.101');},
-  ping(h='8.8.8.8'){for(let i=0;i<4;i++)print(`Ответ от ${h}: время=${Math.floor(Math.random()*50+20)}мс`);}
+    help(){
+        ['HELP','DIR','CD [path]','CLS','ECHO [text]','TYPE [file]','MKDIR [name]','RMDIR [name]','DEL [file]','IPCONFIG','PING [host]'].forEach(l=>print(l));
+        print('Больше команд в разработке...');
+    },
+    cls(){clearScreen();},
+    echo(...a){print(a.join(' '));},
+    dir(){
+        const node=getNode(path);
+        if(!node) return print('Ошибка: Не удалось найти путь', 'error');
+        print(`Содержимое ${joinPath()}:`);
+        Object.keys(node).forEach(f=>print(`> ${f}`));
+    },
+    cd(p){
+        if(!p) return print('Укажите путь', 'error');
+        const parts=p.split(/\\|\//);
+        for(const part of parts){
+            if(part==='..'&&path.length>1) path.pop();
+            else if(getNode([...path,part])&&typeof getNode([...path,part])==='object') path.push(part);
+            else return print('Путь не найден', 'error');
+        }
+        saveState();
+    },
+    mkdir(n){
+        if(!n) return print('Укажите имя папки', 'error');
+        const node=getNode(path);
+        if(node.hasOwnProperty(n)) return print('Папка уже существует', 'error');
+        node[n]={};
+        print(`Папка '${n}' создана`);
+        saveState();
+    },
+    rmdir(n){
+        if(!n) return print('Укажите имя папки', 'error');
+        const node=getNode([...path,n]);
+        if(!node||typeof node!=='object') return print('Папка не найдена', 'error');
+        if(Object.keys(node).length > 0) return print('Папка не пуста', 'error');
+        delete getNode(path)[n];
+        print(`Папка '${n}' удалена`);
+        saveState();
+    },
+    del(f){
+        if(!f) return print('Укажите имя файла', 'error');
+        const node=getNode([...path,f]);
+        if(!node||typeof node!=='string') return print('Файл не найден', 'error');
+        delete getNode(path)[f];
+        print(`Файл '${f}' удален`);
+        saveState();
+    },
+    type(f){
+        const n=getNode([...path,f]);
+        if(typeof n==='string') n.split('\n').forEach(print);
+        else print('Файл не найден', 'error');
+    },
+    ipconfig(){print('IPv4: 192.168.0.101', 'success');},
+    ping(h='8.8.8.8'){
+        const progressFill=document.getElementById('progress-fill');
+        let i=0;
+        progressFill.style.width='0%';
+        const interval=setInterval(()=>{
+            if(i<4){
+                print(`Ответ от ${h}: время=${Math.floor(Math.random()*50+20)}мс`);
+                i++;
+                progressFill.style.width=`${(i/4)*100}%`;
+            }else{
+                clearInterval(interval);
+                progressFill.style.width='0%';
+                promptLine();
+            }
+        },1000);
+    },
+    hack(t='target'){
+        const progressFill=document.getElementById('progress-fill');
+        let i=0;
+        print(`Взлом ${t} ...`);
+        progressFill.style.width='0%';
+        const hackInterval=setInterval(()=>{
+            if(i<100){
+                const message=Math.random()<0.5?'Успех...':'Ошибка...';
+                print(`[${i+1}%] ${message}`, Math.random()<0.7?'success':'error');
+                i+=Math.floor(Math.random()*10);
+                progressFill.style.width=`${Math.min(i,100)}%`;
+            } else {
+                clearInterval(hackInterval);
+                print(`Взлом ${t} завершен!`, 'success');
+                progressFill.style.width='0%';
+                promptLine();
+            }
+        },150);
+    }
 };
-function getNode(arr){let n=fs;for(const p of arr){if(!n[p])return null;n=n[p];}return n;}
-function execute(line){if(!line)return;history.push(line);historyIndex=history.length;cmdCount++;document.getElementById('cmd-count')&&(document.getElementById('cmd-count').textContent=cmdCount);log&&(log.innerHTML+=line+'<br>');const [c,...rest]=parseArgs(line);(commands[c.toLowerCase()]||(()=>print(`'${c}' не найдена`)))(...rest);}
-function submitCurrent(){const l=document.getElementById('current-line');if(l)l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> ${buffer}`;execute(buffer);buffer='';caret=0;promptLine();}
+function execute(line){
+    if(!line){promptLine(); return;}
+    history.push(line);
+    historyIndex=history.length;
+    cmdCount++;
+    document.getElementById('cmd-count')&&(document.getElementById('cmd-count').textContent=cmdCount);
+    log&&(log.innerHTML+=line+'<br>');
+    const [c,...rest]=parseArgs(line);
+    const cmdFunc=commands[c.toLowerCase()];
+    if(cmdFunc){
+        if(c.toLowerCase()==='ping'||c.toLowerCase()==='hack'){
+            cmdFunc(...rest);
+            return;
+        }
+        cmdFunc(...rest);
+    }
+    else print(`'${c}' не найдена`, 'error');
+    promptLine();
+}
+function submitCurrent(){
+    const l=document.getElementById('current-line');
+    if(l) l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> ${buffer}`;
+    execute(buffer);
+    buffer='';
+    caret=0;
+}
 cmd&&cmd.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){submitCurrent(); e.preventDefault();}
-  else if(e.key==='Backspace'){if(caret>0){buffer=buffer.slice(0,caret-1)+buffer.slice(caret);caret--;renderBuffer();}e.preventDefault();}
-  else if(e.key==='ArrowLeft'){caret=Math.max(0,caret-1);renderBuffer(); e.preventDefault();}
-  else if(e.key==='ArrowRight'){caret=Math.min(buffer.length,caret+1);renderBuffer(); e.preventDefault();}
-  else if(e.key==='ArrowUp'){if(historyIndex>0){historyIndex--;buffer=history[historyIndex];caret=buffer.length;renderBuffer();} e.preventDefault();}
-  else if(e.key==='ArrowDown'){if(historyIndex<history.length-1){historyIndex++;buffer=history[historyIndex];}else{historyIndex=history.length;buffer='';}caret=buffer.length;renderBuffer(); e.preventDefault();}
-  else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){buffer=buffer.slice(0,caret)+e.key+buffer.slice(caret);caret++;renderBuffer(); e.preventDefault();}
+    if(e.key==='Enter'){submitCurrent(); e.preventDefault();}
+    else if(e.key==='Backspace'){if(caret>0){buffer=buffer.slice(0,caret-1)+buffer.slice(caret);caret--;renderBuffer();}e.preventDefault();}
+    else if(e.key==='ArrowLeft'){caret=Math.max(0,caret-1);renderBuffer(); e.preventDefault();}
+    else if(e.key==='ArrowRight'){caret=Math.min(buffer.length,caret+1);renderBuffer(); e.preventDefault();}
+    else if(e.key==='ArrowUp'){if(historyIndex>0){historyIndex--;buffer=history[historyIndex];}else{historyIndex=0;buffer=history[0]||'';}caret=buffer.length;renderBuffer(); e.preventDefault();}
+    else if(e.key==='ArrowDown'){if(historyIndex<history.length-1){historyIndex++;buffer=history[historyIndex];}else{historyIndex=history.length;buffer='';}caret=buffer.length;renderBuffer(); e.preventDefault();}
+    else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){buffer=buffer.slice(0,caret)+e.key+buffer.slice(caret);caret++;renderBuffer(); e.preventDefault();}
 });
 cmd&&cmd.addEventListener('paste',e=>{const t=(e.clipboardData||window.clipboardData).getData('text');buffer=buffer.slice(0,caret)+t+buffer.slice(caret);caret+=t.length;renderBuffer(); e.preventDefault();});
 promptLine();
@@ -136,6 +279,22 @@ document.getElementById('gen-pw')?.addEventListener('click',()=>{
 document.getElementById('copy-pw')?.addEventListener('click',()=>{
     const out=document.getElementById('pw-output');
     if(out.textContent) navigator.clipboard.writeText(out.textContent);
+});
+
+// Шифрование Base64
+document.getElementById('b64-encode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value;
+    const output=document.getElementById('b64-output');
+    output.textContent=btoa(input);
+});
+document.getElementById('b64-decode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value;
+    const output=document.getElementById('b64-output');
+    try{
+        output.textContent=atob(input);
+    } catch(e){
+        output.textContent='Ошибка: неверные данные Base64';
+    }
 });
 </script>
 </body>
