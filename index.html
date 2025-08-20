@@ -81,7 +81,7 @@ document.querySelectorAll('.nav button[data-page]').forEach(b=>{
     });
 });
 
-// CMD
+// CMD эмуляция
 const cmd=document.getElementById('cmd');
 const log=document.getElementById('cmd-log');
 let buffer='', caret=0, history=[], historyIndex=-1, cmdCount=0;
@@ -89,23 +89,33 @@ const path=['C:','Users','Guest'];
 const fs={'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}};
 function joinPath(){return path.join('\\');}
 function print(text=''){const d=document.createElement('div');d.className='line';d.textContent=text;cmd.appendChild(d);cmd.scrollTop=cmd.scrollHeight;}
-function promptLine(){if(!cmd) return;const l=document.createElement('div');l.className='line';l.id='current-line';l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;cmd.appendChild(l);renderBuffer();cmd.scrollTop=cmd.scrollHeight;}
+function promptLine(){const l=document.createElement('div');l.className='line';l.id='current-line';l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;cmd.appendChild(l);renderBuffer();cmd.scrollTop=cmd.scrollHeight;}
 function renderBuffer(){document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret));document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret));}
 function clearScreen(){cmd.innerHTML='';}
 function parseArgs(s){return s.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)||[];}
-const commands={help(){['HELP','DIR','CD [path]','CLS','ECHO [text]','TYPE [file]','IPCONFIG','PING host'].forEach(l=>print(l));},cls(){clearScreen();},echo(...a){print(a.join(' '));},dir(){const node=getNode(path);if(!node)return;print('Ошибка');Object.keys(node).forEach(f=>print(f));},cd(p){if(!p)return;const parts=p.split('\\');for(const part of parts){if(part==='..'&&path.length>1)path.pop();else if(getNode([...path,part]))path.push(part);}},type(f){const n=getNode([...path,f]);if(typeof n==='string')n.split('\n').forEach(print);else print('Файл не найден');},ipconfig(){print('IPv4:192.168.0.101');},ping(h='8.8.8.8'){for(let i=0;i<4;i++)print(`Ответ от ${h}: время=${Math.floor(Math.random()*50+20)}мс`);}};
+const commands={
+  help(){['HELP','DIR','CD [path]','CLS','ECHO [text]','TYPE [file]','IPCONFIG','PING host'].forEach(l=>print(l));},
+  cls(){clearScreen();},
+  echo(...a){print(a.join(' '));},
+  dir(){const node=getNode(path);if(!node)return;print('Ошибка');Object.keys(node).forEach(f=>print(f));},
+  cd(p){if(!p)return;const parts=p.split('\\');for(const part of parts){if(part==='..'&&path.length>1)path.pop();else if(getNode([...path,part]))path.push(part);}},
+  type(f){const n=getNode([...path,f]);if(typeof n==='string')n.split('\n').forEach(print);else print('Файл не найден');},
+  ipconfig(){print('IPv4:192.168.0.101');},
+  ping(h='8.8.8.8'){for(let i=0;i<4;i++)print(`Ответ от ${h}: время=${Math.floor(Math.random()*50+20)}мс`);}
+};
 function getNode(arr){let n=fs;for(const p of arr){if(!n[p])return null;n=n[p];}return n;}
 function execute(line){if(!line)return;history.push(line);historyIndex=history.length;cmdCount++;document.getElementById('cmd-count')&&(document.getElementById('cmd-count').textContent=cmdCount);log&&(log.innerHTML+=line+'<br>');const [c,...rest]=parseArgs(line);(commands[c.toLowerCase()]||(()=>print(`'${c}' не найдена`)))(...rest);}
 function submitCurrent(){const l=document.getElementById('current-line');if(l)l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> ${buffer}`;execute(buffer);buffer='';caret=0;promptLine();}
 cmd&&cmd.addEventListener('keydown',e=>{
-if(e.key==='Enter'){submitCurrent();e.preventDefault();}
-else if(e.key==='Backspace'){if(caret>0){buffer=buffer.slice(0,caret-1)+buffer.slice(caret);caret--;renderBuffer();}e.preventDefault();}
-else if(e.key==='ArrowLeft'){caret=Math.max(0,caret-1);renderBuffer();e.preventDefault();}
-else if(e.key==='ArrowRight'){caret=Math.min(buffer.length,caret+1);renderBuffer();e.preventDefault();}
-else if(e.key==='ArrowUp'){if(historyIndex>0){historyIndex--;buffer=history[historyIndex];caret=buffer.length;renderBuffer();}e.preventDefault();}
-else if(e.key==='ArrowDown'){if(historyIndex<history.length-1){historyIndex++;buffer=history[historyIndex];}else{historyIndex=history.length;buffer='';}caret=buffer.length;renderBuffer();e.preventDefault();}
-else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){buffer=buffer.slice(0,caret)+e.key+buffer.slice(caret);caret++;renderBuffer();e.preventDefault();}});
-cmd&&cmd.addEventListener('paste',e=>{const t=(e.clipboardData||window.clipboardData).getData('text');buffer=buffer.slice(0,caret)+t+buffer.slice(caret);caret+=t.length;renderBuffer();e.preventDefault();});
+  if(e.key==='Enter'){submitCurrent(); e.preventDefault();}
+  else if(e.key==='Backspace'){if(caret>0){buffer=buffer.slice(0,caret-1)+buffer.slice(caret);caret--;renderBuffer();}e.preventDefault();}
+  else if(e.key==='ArrowLeft'){caret=Math.max(0,caret-1);renderBuffer(); e.preventDefault();}
+  else if(e.key==='ArrowRight'){caret=Math.min(buffer.length,caret+1);renderBuffer(); e.preventDefault();}
+  else if(e.key==='ArrowUp'){if(historyIndex>0){historyIndex--;buffer=history[historyIndex];caret=buffer.length;renderBuffer();} e.preventDefault();}
+  else if(e.key==='ArrowDown'){if(historyIndex<history.length-1){historyIndex++;buffer=history[historyIndex];}else{historyIndex=history.length;buffer='';}caret=buffer.length;renderBuffer(); e.preventDefault();}
+  else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){buffer=buffer.slice(0,caret)+e.key+buffer.slice(caret);caret++;renderBuffer(); e.preventDefault();}
+});
+cmd&&cmd.addEventListener('paste',e=>{const t=(e.clipboardData||window.clipboardData).getData('text');buffer=buffer.slice(0,caret)+t+buffer.slice(caret);caret+=t.length;renderBuffer(); e.preventDefault();});
 promptLine();
 document.getElementById('btn-full')?.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
 document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(cmd.innerText);});
