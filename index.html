@@ -2,13 +2,13 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hacker 3D — Панель</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hacker 3D — CMD & Widgets (#FF4500)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#FF4500;
-  --accent2:#00FFAB;
   --bg:#0b0b0f;
   --bg-soft:#0f1117;
   --fg:#e6e6e6;
@@ -16,146 +16,214 @@
   --glass: rgba(255,69,0,0.08);
   --shadow: 0 10px 30px rgba(255,69,0,0.15), 0 2px 10px rgba(0,0,0,0.5);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'JetBrains Mono', monospace;background:radial-gradient(1200px 600px at 70% -10%, rgba(255,69,0,0.15), transparent 60%),radial-gradient(800px 500px at -20% 90%, rgba(255,69,0,0.12), transparent 55%), var(--bg);color:var(--fg);overflow-x:hidden;}
-header{padding:1rem 3%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,69,0,0.3);}
-.logo{font-weight:800;letter-spacing:.08em;font-size:1.4rem;color:var(--accent);text-decoration:none;}
-.nav{display:flex;gap:1rem;}
-.nav button{background:none;border:1px solid rgba(255,69,0,0.5);padding:6px 10px;border-radius:8px;color:var(--fg);cursor:pointer;transition:.2s;box-shadow:var(--shadow);}
-.nav button.active, .nav button:hover{border-color:var(--accent);color:var(--accent);}
-main{padding:1rem 3%;display:grid;gap:1.2rem;}
-.panel{background:linear-gradient(to bottom right, rgba(255,69,0,0.08), rgba(255,69,0,0.02));border:1px solid rgba(255,69,0,0.5);border-radius:12px;padding:1rem;box-shadow:var(--shadow);}
-.hidden{display:none;}
-h1{color:var(--accent);}
-.kbd{display:inline-flex;padding:2px 6px;border-radius:6px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);font-size:.78rem;}
-/* CMD */
-.cmd-window{background:#000;color:#dcdcdc;border-radius:10px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.45);}
-.cmd-title{background:#0c3c78;color:#fff;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;font-size:12px;}
-.cmd-body{padding:10px;height:300px;overflow:auto;font-size:14px;line-height:1.35;font-family:Consolas, 'JetBrains Mono', monospace;}
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0; font-family:'JetBrains Mono', monospace; color:var(--fg);}
+body{
+  background:
+    radial-gradient(1200px 600px at 70% -10%, rgba(255,69,0,0.15), transparent 60%),
+    radial-gradient(800px 500px at -20% 90%, rgba(255,69,0,0.12), transparent 55%),
+    var(--bg);
+  overflow-x:hidden;
+}
+
+/* Сетка и матрица */
+.grid-bg{
+  position:fixed; inset:0; pointer-events:none; z-index:-2;
+  background: linear-gradient(transparent 24px, rgba(255,255,255,0.04) 25px),
+              linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.04) 25px);
+  background-size:25px 25px;
+  transform:perspective(900px) rotateX(55deg) translateY(-15vh);
+  filter:drop-shadow(0 0 10px rgba(255,69,0,0.25));
+  animation:gridFloat 14s ease-in-out infinite alternate;
+}
+@keyframes gridFloat{to{transform:perspective(900px) rotateX(60deg) translateY(-12vh) translateX(2vw)}}
+canvas#rain{position:fixed; inset:0; z-index:-3; opacity:.35;}
+
+/* header */
+header{padding:clamp(20px,4vw,48px) 6vw 10px; display:flex; justify-content:space-between; align-items:center;}
+.logo{display:flex; gap:12px; align-items:center; text-decoration:none; color:var(--fg);}
+.brand{font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:clamp(16px,2.6vw,24px);}
+.actions a{
+  position:relative; border:1px solid rgba(255,69,0,0.5); background:var(--glass); color:var(--fg);
+  padding:10px 14px; border-radius:12px; cursor:pointer; text-decoration:none; box-shadow:var(--shadow);
+}
+.actions a:hover{transform:translateY(-2px); border-color:var(--accent);}
+
+/* вкладки */
+.tabs{display:flex; gap:12px; margin:12px 6vw;}
+.tab{padding:6px 14px; border-radius:8px; cursor:pointer; background:var(--glass); border:1px solid rgba(255,69,0,0.3);}
+.tab.active{background:var(--accent); color:#000; font-weight:700;}
+
+/* основной контент */
+main{padding:16px 6vw 64px;}
+.panel{
+  background:linear-gradient(to bottom right, rgba(255,69,0,0.08), rgba(255,69,0,0.02));
+  border:1px solid rgba(255,69,0,0.5); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; padding:12px;
+}
+
+/* CMD окно */
+.cmd-wrap{padding:14px;}
+.cmd-window{
+  background:#000; color:#dcdcdc; border:1px solid #222; border-radius:10px; overflow:hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+.cmd-title{background:#0c3c78; color:#fff; padding:6px 10px; font-size:12px; display:flex; align-items:center; justify-content:space-between;}
+.cmd-title .wbtns{display:flex; gap:6px;}
+.wbtn{width:12px; height:12px; border-radius:2px; background:#e5e7eb; opacity:.9;}
+.cmd-body{padding:10px; height:420px; overflow:auto; font-size:14px; line-height:1.35; font-family:Consolas, 'JetBrains Mono', monospace;}
 .line{white-space:pre-wrap;}
 .prompt{color:#dcdcdc;}
 .path{color:#9cdcfe;}
-.cursor{display:inline-block;width:7px;height:1.2em;background:#dcdcdc;margin-left:1px;transform:translateY(3px);animation:blink 1s steps(2) infinite;}
+.cursor{display:inline-block; width:7px; height:1.2em; background:#dcdcdc; margin-left:1px; transform:translateY(3px); animation:blink 1.05s steps(2) infinite;}
 @keyframes blink{50%{opacity:0}}
-/* Виджеты */
-.widget{margin:1rem 0;padding:1rem;background:rgba(255,69,0,0.05);border-radius:10px;}
-.widget h3{margin-bottom:.5rem;color:var(--accent);}
-button.widget-btn{padding:6px 10px;border-radius:6px;border:1px solid rgba(255,69,0,0.5);background:var(--glass);color:var(--fg);cursor:pointer;}
-button.widget-btn:hover{border-color:var(--accent);}
-#number-result,#password-result,#calc-result{margin-top:.5rem;font-weight:600;color:var(--accent2);}
+.cmd-body::selection, .line::selection{background:#444; color:#fff}
+
+/* виджеты */
+.widget{padding:12px; margin:8px 0; background:rgba(0,0,0,0.2); border-radius:12px; box-shadow:var(--shadow);}
+.widget h3{margin:0 0 6px; color:var(--accent);}
+input, button{padding:6px 10px; border-radius:8px; border:1px solid rgba(255,69,0,0.5); background:var(--glass); color:var(--fg); margin-right:6px;}
+button:hover{background:var(--accent); color:#000; cursor:pointer;}
+
+/* футер */
+footer{padding:18px 6vw 54px; color:var(--muted); text-align:center;}
 </style>
 </head>
 <body>
+<div class="grid-bg"></div>
+<canvas id="rain"></canvas>
+
 <header>
-  <a href="#" class="logo">Hacker 3D</a>
-  <nav class="nav">
-    <button class="tab-btn active" data-tab="home">Главная</button>
-    <button class="tab-btn" data-tab="widgets">Виджеты</button>
-    <button class="tab-btn" data-tab="cmd">CMD</button>
-    <button class="tab-btn" data-tab="about">О проекте</button>
-  </nav>
+  <a class="logo" href="#"><div class="brand">Hacker 3D</div></a>
+  <div class="actions">
+    <a href="#" id="btn-full">Полноэкранный режим</a>
+    <a href="#" id="btn-copy">Скопировать CMD</a>
+  </div>
 </header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="home">Главная</div>
+  <div class="tab" data-tab="widgets">Виджеты</div>
+  <div class="tab" data-tab="cmd">CMD</div>
+  <div class="tab" data-tab="about">О проекте</div>
+</div>
+
 <main>
   <!-- Главная -->
-  <section id="home" class="panel tab-panel">
-    <h1>🕶️💻 Добро пожаловать в Hacker 3D</h1>
-    <p>Эмулятор CMD, виджеты и многое другое прямо в браузере. <br> Горячие клавиши: <span class="kbd">/</span> — фокус на CMD, <span class="kbd">F</span> — fullscreen.</p>
+  <section class="panel tab-content" id="home">
+    <h2>Добро пожаловать в Hacker 3D!</h2>
+    <p>Эмулятор CMD и интерактивные виджеты в одном интерфейсе. Используй вкладки, чтобы переключаться.</p>
   </section>
 
   <!-- Виджеты -->
-  <section id="widgets" class="panel tab-panel hidden">
+  <section class="panel tab-content" id="widgets" style="display:none;">
     <div class="widget">
-      <h3>🎲 Рандомайзер чисел</h3>
-      <button class="widget-btn" onclick="randomNumber()">Сгенерировать</button>
-      <div id="number-result"></div>
+      <h3>🕒 Часы</h3>
+      <div id="clock" style="font-size:1.4rem;"></div>
     </div>
     <div class="widget">
-      <h3>⏰ Цифровые часы</h3>
-      <div id="clock" style="font-weight:600;color:var(--accent2)"></div>
+      <h3>🎲 Рандомайзер</h3>
+      <button onclick="randNumber()">Сгенерировать число 0-100</button> <span id="randOut"></span>
     </div>
     <div class="widget">
-      <h3>🔐 Генератор паролей</h3>
-      <button class="widget-btn" onclick="generatePassword()">Сгенерировать</button>
-      <div id="password-result"></div>
+      <h3>🔑 Генератор пароля</h3>
+      <button onclick="genPassword()">Сгенерировать пароль</button> <span id="passOut"></span>
     </div>
     <div class="widget">
       <h3>🧮 Калькулятор</h3>
-      <input type="text" id="calc-input" placeholder="Введите выражение" style="padding:4px 6px;border-radius:6px;border:1px solid rgba(255,69,0,0.5);background:var(--glass);color:var(--fg);width:150px;">
-      <button class="widget-btn" onclick="calculate()">Вычислить</button>
-      <div id="calc-result"></div>
+      <input type="text" id="calcInput" placeholder="1+2*3">
+      <button onclick="calcEval()">Вычислить</button> <span id="calcOut"></span>
     </div>
   </section>
 
   <!-- CMD -->
-  <section id="cmd" class="panel tab-panel hidden">
-    <div class="cmd-window">
-      <div class="cmd-title">Командная строка</div>
-      <div class="cmd-body" id="term" tabindex="0" aria-label="CMD emulator"></div>
+  <section class="panel tab-content" id="cmd" style="display:block;">
+    <div class="cmd-wrap">
+      <div class="cmd-window" id="cmdwin">
+        <div class="cmd-title"><span>Командная строка</span><span class="wbtns"><span class="wbtn"></span><span class="wbtn"></span><span class="wbtn"></span></span></div>
+        <div class="cmd-body" id="term" tabindex="0" aria-label="CMD emulator"></div>
+      </div>
     </div>
   </section>
 
-  <!-- О проекте -->
-  <section id="about" class="panel tab-panel hidden">
-    <h1>О проекте Hacker 3D</h1>
-    <p>Это демонстрационный сайт с эмулятором командной строки, интерактивными виджетами и хакерским стилем. Все работает прямо в браузере, без серверных зависимостей.</p>
+  <!-- About -->
+  <section class="panel tab-content" id="about" style="display:none;">
+    <h2>О проекте</h2>
+    <p>Hacker 3D — веб-эмулятор CMD с дополнительными виджетами для интерактивного обучения и развлечений. Все элементы оформлены в стиле неонового хакерского интерфейса.</p>
   </section>
 </main>
 
+<footer>Сделано с любовью к <b style="color:var(--accent)">#FF4500</b>.</footer>
+
 <script>
-/* ===== Таб-панели ===== */
-const tabs = document.querySelectorAll('.tab-btn');
-const panels = document.querySelectorAll('.tab-panel');
-tabs.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    tabs.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const tab = btn.dataset.tab;
-    panels.forEach(p=>p.classList.add('hidden'));
-    document.getElementById(tab).classList.remove('hidden');
+// вкладки
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    contents.forEach(c=>c.style.display='none');
+    document.getElementById(t.dataset.tab).style.display='block';
   });
 });
 
-/* ===== Виджеты ===== */
-function randomNumber(){document.getElementById('number-result').textContent=Math.floor(Math.random()*100+1);}
-function generatePassword(){const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';let p='';for(let i=0;i<12;i++)p+=chars[Math.floor(Math.random()*chars.length)];document.getElementById('password-result').textContent=p;}
-function calculate(){try{const val=eval(document.getElementById('calc-input').value);document.getElementById('calc-result').textContent=val;}catch(e){document.getElementById('calc-result').textContent='Ошибка!';}}
+// часы
+function updateClock(){
+  const now = new Date();
+  const out = now.toLocaleTimeString();
+  document.getElementById('clock').textContent = out;
+}
+setInterval(updateClock,1000); updateClock();
 
-/* ===== Цифровые часы ===== */
-function updateClock(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString();}setInterval(updateClock,1000);updateClock();
+// рандомайзер
+function randNumber(){ document.getElementById('randOut').textContent = Math.floor(Math.random()*101); }
 
-/* ===== CMD эмулятор ===== */
+// генератор пароля
+function genPassword(){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
+  let pass=''; for(let i=0;i<12;i++){ pass+=chars[Math.floor(Math.random()*chars.length)]; }
+  document.getElementById('passOut').textContent = pass;
+}
+
+// калькулятор
+function calcEval(){
+  const inp = document.getElementById('calcInput').value;
+  try{ document.getElementById('calcOut').textContent = eval(inp); }
+  catch(e){ document.getElementById('calcOut').textContent = 'Ошибка'; }
+}
+
+// === Matrix rain ===
 (function(){
-  const term=document.getElementById('term');
-  const state={path:['C:','Users','Guest'],history:[],historyIndex:-1,buffer:'',caret:0,fs:{'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK — Good Hacker\nВерсия 1.0','projects':{'hacker3d':{'index.html':'<!-- ваш сайт -->'}}}},'Windows':{'System32':{}},'Temp':{}}}};
-  const joinPath=arr=>arr.join('\\');
-  function print(text=''){const div=document.createElement('div');div.className='line';div.textContent=text;term.appendChild(div);term.scrollTop=term.scrollHeight;}
-  function promptLine(){const line=document.createElement('div');line.className='line';line.id='current-line';line.innerHTML=`<span class="prompt"><span class="path">${joinPath(state.path)}&gt;</span> </span><span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;term.appendChild(line);term.scrollTop=term.scrollHeight;renderBuffer();}
-  function renderBuffer(){document.getElementById('buf-left').textContent=state.buffer.slice(0,state.caret);document.getElementById('buf-right').textContent=state.buffer.slice(state.caret);}
-  function execute(line){const cmd=line.trim().toLowerCase();if(!cmd)return;print(`> ${line}`);print(`Команда "${cmd}" выполнена (демо).`);}
-  function submitCurrent(){const line=state.buffer;state.buffer='';state.caret=0;if(line){state.history.push(line);state.historyIndex=state.history.length;}execute(line);setTimeout(promptLine,50);}
-  function moveCaret(delta){state.caret=Math.max(0,Math.min(state.buffer.length,state.caret+delta));renderBuffer();}
-  term.addEventListener('keydown',e=>{
-    if(e.key==='ArrowUp'){if(state.historyIndex>0){state.historyIndex--;state.buffer=state.history[state.historyIndex];state.caret=state.buffer.length;renderBuffer();}e.preventDefault();}
-    if(e.key==='ArrowDown'){if(state.historyIndex<state.history.length-1){state.historyIndex++;state.buffer=state.history[state.historyIndex];}else{state.historyIndex=state.history.length;state.buffer='';}state.caret=state.buffer.length;renderBuffer();e.preventDefault();}
-    if(e.key==='ArrowLeft'){moveCaret(-1);e.preventDefault();}
-    if(e.key==='ArrowRight'){moveCaret(1);e.preventDefault();}
-    if(e.key==='Backspace'){if(state.caret>0){state.buffer=state.buffer.slice(0,state.caret-1)+state.buffer.slice(state.caret);state.caret--;renderBuffer();}e.preventDefault();}
-    if(e.key==='Delete'){if(state.caret<state.buffer.length){state.buffer=state.buffer.slice(0,state.caret)+state.buffer.slice(state.caret+1);renderBuffer();}e.preventDefault();}
-    if(e.key==='Enter'){submitCurrent();e.preventDefault();}
-    if(e.ctrlKey||e.metaKey)return;
-    if(e.key.length===1){state.buffer=state.buffer.slice(0,state.caret)+e.key+state.buffer.slice(state.caret);state.caret++;renderBuffer();e.preventDefault();}
-  });
-  term.addEventListener('paste',e=>{const text=(e.clipboardData||window.clipboardData).getData('text');state.buffer=state.buffer.slice(0,state.caret)+text+state.buffer.slice(state.caret);state.caret+=text.length;renderBuffer();e.preventDefault();});
-  term.focus();promptLine();
-  window.addEventListener('keydown',e=>{if(e.key==='/'){e.preventDefault();term.focus();}if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen().catch(()=>{});}}});
+  const c = document.getElementById('rain'); const ctx = c.getContext('2d');
+  function size(){ c.width = innerWidth; c.height = innerHeight; }
+  size(); addEventListener('resize', size);
+  const chars = '01█▓░#@ΔΣλπ$%<>/\\\\;:[]{}*&^!?'.split('');
+  const fontSize = 16; let drops = new Array(Math.floor(innerWidth/fontSize)).fill(1);
+  (function draw(){
+    ctx.fillStyle = 'rgba(11,11,15,0.08)'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle = 'rgba(255,69,0,0.85)'; ctx.font = fontSize + 'px JetBrains Mono';
+    drops.forEach((y,i)=>{
+      const text = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(text, i*fontSize, y*fontSize);
+      if (y*fontSize > c.height && Math.random() > .975) drops[i]=0;
+      drops[i] = y + 1;
+    });
+    requestAnimationFrame(draw);
+  })();
 })();
 
-/* ===== Хакерский звук ===== */
-(function(){
-  const context=new (window.AudioContext||window.webkitAudioContext)();
-  function beep(){const o=context.createOscillator();const g=context.createGain();o.connect(g);g.connect(context.destination);o.type='square';o.frequency.setValueAtTime(800+Math.random()*400,context.currentTime);g.gain.setValueAtTime(0.03,context.currentTime);o.start();o.stop(context.currentTime+0.1);}
-  setInterval(beep,700);
-})();
+// fullscreen / copy
+document.getElementById('btn-full').addEventListener('click',(e)=>{ e.preventDefault();
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
+  else document.exitFullscreen().catch(()=>{});
+});
+document.getElementById('btn-copy').addEventListener('click',(e)=>{ e.preventDefault();
+  const text = document.getElementById('term').innerText;
+  navigator.clipboard?.writeText(text);
+});
+
+// === CMD ===
+// Здесь можно вставить твой полный код эмулятора CMD из предыдущего файла
 </script>
 </body>
 </html>
