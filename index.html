@@ -73,54 +73,89 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
 .progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
+
+/* Стили для матрицы */
+footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid var(--accent);
+    margin-top: 20px;
+}
+.matrix-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.matrix-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 4px;
+    box-shadow: 0 0 5px var(--fg);
+}
 </style>
 </head>
 <body>
 <audio id="bg-audio" autoplay loop><source src="1.mp3" type="audio/mpeg"></audio>
 <header>
-  <div class="logo">HACKPACK GOOD HAKER</div>
-  <div class="nav">
-    <button class="btn" data-page="home">Главная</button>
-    <button class="btn" data-page="widgets">Виджеты</button>
-    <button class="btn" id="btn-full">Полноэкранный</button>
-    <button class="btn" id="btn-copy">Копировать</button>
-  </div>
+  <div class="logo">HACKPACK GOOD HAKER</div>
+  <div class="nav">
+    <button class="btn" data-page="home">Главная</button>
+    <button class="btn" data-page="widgets">Виджеты</button>
+    <button class="btn" id="btn-full">Полноэкранный</button>
+    <button class="btn" id="btn-copy">Копировать</button>
+  </div>
 </header>
 <main>
-  <section class="page" id="home">
-    <h2>Главная страница</h2>
-    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
+  <section class="page" id="home">
+    <h2>Главная страница</h2>
+    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
     <div id="center-image"></div>
-    <div id="cortana-face"></div>
-  </section>
-  <section class="page" id="widgets" style="display:none;">
-    <h2>Виджеты</h2>
-    <div class="widgets">
-      <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
-      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
-      <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
-      <div class="widget">
-        <b>Генератор паролей:</b><br>
-        <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
-        <button id="gen-pw">Сгенерировать</button>
-        <button id="copy-pw">Скопировать</button>
-        <div id="pw-output" style="margin-top:6px;"></div>
-      </div>
-      <div class="widget">
-        <b>Шифрование Base64:</b><br>
-        <input type="text" id="b64-input" placeholder="Введите текст">
-        <button id="b64-encode">Зашифровать</button>
-        <button id="b64-decode">Расшифровать</button>
-        <div id="b64-output" style="margin-top:6px;"></div>
-      </div>
-      <div class="widget">
-        <b>Прогресс:</b>
-        <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
-      </div>
-    </div>
-    <div class="cmd-wrap" id="cmd" tabindex="0"></div>
-  </section>
+    <div id="cortana-face"></div>
+  </section>
+  <section class="page" id="widgets" style="display:none;">
+    <h2>Виджеты</h2>
+    <div class="widgets">
+      <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
+      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
+      <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
+      <div class="widget">
+        <b>Генератор паролей:</b><br>
+        <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
+        <button id="gen-pw">Сгенерировать</button>
+        <button id="copy-pw">Скопировать</button>
+        <div id="pw-output" style="margin-top:6px;"></div>
+      </div>
+      <div class="widget">
+        <b>Шифрование Base64:</b><br>
+        <input type="text" id="b64-input" placeholder="Введите текст">
+        <button id="b64-encode">Зашифровать</button>
+        <button id="b64-decode">Расшифровать</button>
+        <div id="b64-output" style="margin-top:6px;"></div>
+      </div>
+      <div class="widget">
+        <b>Прогресс:</b>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+    <div class="cmd-wrap" id="cmd" tabindex="0"></div>
+  </section>
 </main>
+
+<footer>
+    <div class="matrix-container">
+        <div class="matrix-dot" style="background-color: var(--accent);"></div>
+        <div class="matrix-dot" style="background-color: var(--green);"></div>
+        <div class="matrix-dot" style="background-color: var(--blue);"></div>
+        <div class="matrix-dot" style="background-color: var(--fg);"></div>
+        <div class="matrix-dot" style="background-color: var(--accent);"></div>
+        <div class="matrix-dot" style="background-color: var(--green);"></div>
+        <div class="matrix-dot" style="background-color: var(--blue);"></div>
+        <div class="matrix-dot" style="background-color: var(--fg);"></div>
+        <div class="matrix-dot" style="background-color: var(--accent);"></div>
+    </div>
+</footer>
+
 <script>
 // Автозапуск аудио при разрешении пользователя
 window.addEventListener('load',()=>{const audio=document.getElementById('bg-audio');audio.play().catch(()=>{});});
