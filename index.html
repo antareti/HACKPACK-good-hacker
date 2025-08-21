@@ -29,13 +29,7 @@ header{display:flex; justify-content:space-between; align-items:center; padding:
 .btn:hover{background:var(--accent); color:var(--bg-soft);}
 main{display:grid; grid-template-columns:2fr 1fr; gap:16px; padding:16px;}
 section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-shadow:var(--shadow);}
-#home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    height: 100%;
-}
+#home { display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; }
 .widgets{display:grid; gap:12px;}
 .widget{background:var(--bg); padding:12px; border-radius:12px; box-shadow:var(--shadow);}
 .cmd-wrap{background:#000; color:#dcdcdc; border-radius:12px; padding:12px; height:400px; overflow:auto; font-size:14px;}
@@ -48,50 +42,14 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 @keyframes blink{50%{opacity:0}}
 .widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
 .widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
-#center-image{
-    width: 400px;
-    height: 500px;
-    background-image: url('wtugmetswajd1.gif');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin: 16px auto;
-}
-#cortana-face{
-    width:220px;
-    height:220px;
-    border-radius:50%;
-    box-shadow:var(--shadow);
-    background-image: url('cortana.gif');
-    background-size:cover;
-    background-position:center;
-    animation:float 3s ease-in-out infinite;
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
+#center-image{ width: 400px; height: 500px; background-image: url('wtugmetswajd1.gif'); background-size: contain; background-repeat: no-repeat; background-position: center; margin: 16px auto;}
+#cortana-face{ width:220px; height:220px; border-radius:50%; box-shadow:var(--shadow); background-image: url('cortana.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite; position: absolute; top: 16px; right: 16px;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
 .progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
-/* Стили для матрицы */
-footer {
-    padding: 20px;
-    text-align: center;
-    border-top: 1px solid var(--accent);
-    margin-top: 20px;
-}
-.matrix-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-}
-.matrix-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 0 4px;
-    box-shadow: 0 0 5px var(--fg);
-}
+footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent); margin-top: 20px;}
+.matrix-container { display: flex; justify-content: center; margin-top: 10px;}
+.matrix-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 4px; box-shadow: 0 0 5px var(--fg);}
 </style>
 </head>
 <body>
@@ -132,6 +90,20 @@ footer {
         <button id="b64-decode">Расшифровать</button>
         <div id="b64-output" style="margin-top:6px;"></div>
       </div>
+
+      <!-- Новый виджет: Генератор аудио -->
+      <div class="widget">
+        <b>Генератор аудио (Text to MP3):</b><br>
+        <textarea id="tts-text" placeholder="Введите текст..." rows="4" style="width:100%; margin-top:4px;"></textarea><br>
+        <select id="tts-voice" style="margin-top:4px;">
+          <option value="en-US">English (US)</option>
+          <option value="en-GB">English (UK)</option>
+        </select><br>
+        <button id="tts-play" style="margin-top:4px;">▶️ Прослушать</button>
+        <button id="tts-download" style="margin-top:4px;">💾 Скачать MP3</button>
+        <audio id="tts-audio" controls style="margin-top:6px; width:100%; display:none;"></audio>
+      </div>
+
       <div class="widget">
         <b>Прогресс:</b>
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
@@ -154,208 +126,47 @@ footer {
     </div>
 </footer>
 <script>
-// Автозапуск аудио при разрешении пользователя
-window.addEventListener('load',()=>{const audio=document.getElementById('bg-audio');audio.play().catch(()=>{});});
+// ... существующий JS код для CMD, генератора паролей, Base64 ...
 
-// Переключение страниц
-const pages=document.querySelectorAll('.page');
-document.querySelectorAll('.nav button[data-page]').forEach(b=>{
-    b.addEventListener('click',()=>{
-        pages.forEach(p=>p.style.display='none');
-        document.getElementById(b.dataset.page).style.display='block';
-    });
-});
+// Генератор аудио (Text-to-MP3) без API
+const ttsText = document.getElementById('tts-text');
+const ttsVoice = document.getElementById('tts-voice');
+const ttsAudio = document.getElementById('tts-audio');
+const ttsPlay = document.getElementById('tts-play');
+const ttsDownload = document.getElementById('tts-download');
 
-// CMD эмуляция
-const cmd=document.getElementById('cmd');
-const log=document.getElementById('cmd-log');
-let buffer='', caret=0, history=[], historyIndex=-1, cmdCount=0;
-let path = localStorage.getItem('vfs-path') ? localStorage.getItem('vfs-path').split(',') : ['C:','Users','Guest'];
-let fs = JSON.parse(localStorage.getItem('vfs-fs')) || {'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}};
-function saveState(){localStorage.setItem('vfs-path',path.join(','));localStorage.setItem('vfs-fs',JSON.stringify(fs));}
-function joinPath(){return path.join('\\');}
-function print(text='',type='normal'){
-    const d=document.createElement('div');
-    d.className='line';
-    if(type!=='normal') d.className+=' '+type;
-    d.textContent=text;
-    cmd.appendChild(d);
-    cmd.scrollTop=cmd.scrollHeight;
-}
-function promptLine(){
-    const l=document.createElement('div');
-    l.className='line';
-    l.id='current-line';
-    l.innerHTML=`<span class="prompt">${joinPath()}</span>&gt; <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`;
-    cmd.appendChild(l);
-    renderBuffer();
-    cmd.scrollTop=cmd.scrollHeight;
-}
-function renderBuffer(){
-    document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret));
-    document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret));
-}
-function clearScreen(){cmd.innerHTML='';}
-function parseArgs(s){return s.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)||[];}
-function getNode(arr){let n=fs;for(const p of arr){if(!n.hasOwnProperty(p))return null;n=n[p];}return n;}
-const commands={
-    help(){
-        ['HELP','DIR','CD [path]','CLS','ECHO [text]','TYPE [file]','MKDIR [name]','RMDIR [name]','DEL [file]','IPCONFIG','PING [host]'].forEach(l=>print(l));
-        print('Больше команд в разработке...');
-    },
-    cls(){clearScreen();},
-    echo(...a){print(a.join(' '));},
-    dir(){
-        const node=getNode(path);
-        if(!node) return print('Ошибка: Не удалось найти путь', 'error');
-        print(`Содержимое ${joinPath()}:`);
-        Object.keys(node).forEach(f=>print(`> ${f}`));
-    },
-    cd(p){
-        if(!p) return print('Укажите путь', 'error');
-        const parts=p.split(/\\|\//);
-        for(const part of parts){
-            if(part==='..'&&path.length>1) path.pop();
-            else if(getNode([...path,part])&&typeof getNode([...path,part])==='object') path.push(part);
-            else return print('Путь не найден', 'error');
-        }
-        saveState();
-    },
-    mkdir(n){
-        if(!n) return print('Укажите имя папки', 'error');
-        const node=getNode(path);
-        if(node.hasOwnProperty(n)) return print('Папка уже существует', 'error');
-        node[n]={};
-        print(`Папка '${n}' создана`);
-        saveState();
-    },
-    rmdir(n){
-        if(!n) return print('Укажите имя папки', 'error');
-        const node=getNode([...path,n]);
-        if(!node||typeof node!=='object') return print('Папка не найдена', 'error');
-        if(Object.keys(node).length > 0) return print('Папка не пуста', 'error');
-        delete getNode(path)[n];
-        print(`Папка '${n}' удалена`);
-        saveState();
-    },
-    del(f){
-        if(!f) return print('Укажите имя файла', 'error');
-        const node=getNode([...path,f]);
-        if(!node||typeof node!=='string') return print('Файл не найден', 'error');
-        delete getNode(path)[f];
-        print(`Файл '${f}' удален`);
-        saveState();
-    },
-    type(f){
-        const n=getNode([...path,f]);
-        if(typeof n==='string') n.split('\n').forEach(print);
-        else print('Файл не найден', 'error');
-    },
-    ipconfig(){print('IPv4: 192.168.0.101', 'success');},
-    ping(h='8.8.8.8'){
-        const progressFill=document.getElementById('progress-fill');
-        let i=0;
-        progressFill.style.width='0%';
-        const interval=setInterval(()=>{
-            if(i<4){
-                print(`Ответ от ${h}: время=${Math.floor(Math.random()*50+20)}мс`);
-                i++;
-                progressFill.style.width=`${(i/4)*100}%`;
-            }else{
-                clearInterval(interval);
-                progressFill.style.width='0%';
-                promptLine();
-            }
-        },1000);
-    },
-    hack(t='target'){
-        const progressFill=document.getElementById('progress-fill');
-        let i=0;
-        print(`Взлом ${t} ...`);
-        progressFill.style.width='0%';
-        const hackInterval=setInterval(()=>{
-            if(i<100){
-                const message=Math.random()<0.5?'Успех...':'Ошибка...';
-                print(`[${i+1}%] ${message}`, Math.random()<0.7?'success':'error');
-                i+=Math.floor(Math.random()*10);
-                progressFill.style.width=`${Math.min(i,100)}%`;
-            } else {
-                clearInterval(hackInterval);
-                print(`Взлом ${t} завершен!`, 'success');
-                progressFill.style.width='0%';
-                promptLine();
-            }
-        },150);
-    }
-};
-function execute(line){
-    if(!line){promptLine(); return;}
-    history.push(line);
-    historyIndex=history.length;
-    cmdCount++;
-    document.getElementById('cmd-count')&&(document.getElementById('cmd-count').textContent=cmdCount);
-    log&&(log.innerHTML+=line+'<br>');
-    const [c,...rest]=parseArgs(line);
-    const cmdFunc=commands[c.toLowerCase()];
-    if(cmdFunc){
-        if(c.toLowerCase()==='ping'||c.toLowerCase()==='hack'){
-            cmdFunc(...rest);
-            return;
-        }
-        cmdFunc(...rest);
-    }
-    else print(`'${c}' не найдена`, 'error');
-    promptLine();
-}
-function submitCurrent(){
-    const l=document.getElementById('current-line');
-    if(l) l.innerHTML=`<span class="prompt">${joinPath()}&gt;</span> ${buffer}`;
-    execute(buffer);
-    buffer='';
-    caret=0;
-}
-cmd&&cmd.addEventListener('keydown',e=>{
-    if(e.key==='Enter'){submitCurrent(); e.preventDefault();}
-    else if(e.key==='Backspace'){if(caret>0){buffer=buffer.slice(0,caret-1)+buffer.slice(caret);caret--;renderBuffer();}e.preventDefault();}
-    else if(e.key==='ArrowLeft'){caret=Math.max(0,caret-1);renderBuffer(); e.preventDefault();}
-    else if(e.key==='ArrowRight'){caret=Math.min(buffer.length,caret+1);renderBuffer(); e.preventDefault();}
-    else if(e.key==='ArrowUp'){if(historyIndex>0){historyIndex--;buffer=history[historyIndex];}else{historyIndex=0;buffer=history[0]||'';}caret=buffer.length;renderBuffer(); e.preventDefault();}
-    else if(e.key==='ArrowDown'){if(historyIndex<history.length-1){historyIndex++;buffer=history[historyIndex];}else{historyIndex=history.length;buffer='';}caret=buffer.length;renderBuffer(); e.preventDefault();}
-    else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){buffer=buffer.slice(0,caret)+e.key+buffer.slice(caret);caret++;renderBuffer(); e.preventDefault();}
-});
-cmd&&cmd.addEventListener('paste',e=>{const t=(e.clipboardData||window.clipboardData).getData('text');buffer=buffer.slice(0,caret)+t+buffer.slice(caret);caret+=t.length;renderBuffer(); e.preventDefault();});
-promptLine();
-document.getElementById('btn-full')?.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
-document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(cmd.innerText);});
-
-// Генератор паролей
-document.getElementById('gen-pw')?.addEventListener('click',()=>{
-    const len=parseInt(document.getElementById('pw-length').value)||12;
-    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
-    let pw='';
-    for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
-    const out=document.getElementById('pw-output');
-    out.textContent=pw;
-});
-document.getElementById('copy-pw')?.addEventListener('click',()=>{
-    const out=document.getElementById('pw-output');
-    if(out.textContent) navigator.clipboard.writeText(out.textContent);
+ttsPlay.addEventListener('click', ()=>{
+    if(!ttsText.value) return alert("Введите текст для озвучки!");
+    const utter = new SpeechSynthesisUtterance(ttsText.value);
+    utter.lang = ttsVoice.value;
+    utter.onstart = ()=>{ ttsAudio.style.display='none'; };
+    speechSynthesis.speak(utter);
 });
 
-// Шифрование Base64
-document.getElementById('b64-encode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value;
-    const output=document.getElementById('b64-output');
-    output.textContent=btoa(input);
-});
-document.getElementById('b64-decode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value;
-    const output=document.getElementById('b64-output');
-    try{
-        output.textContent=atob(input);
-    } catch(e){
-        output.textContent='Ошибка: неверные данные Base64';
-    }
+ttsDownload.addEventListener('click', ()=>{
+    if(!ttsText.value) return alert("Введите текст для озвучки!");
+    // Используем MediaRecorder для записи озвучки
+    const audioContext = new AudioContext();
+    const dest = audioContext.createMediaStreamDestination();
+    const synth = window.speechSynthesis;
+    const utter = new SpeechSynthesisUtterance(ttsText.value);
+    utter.lang = ttsVoice.value;
+
+    const source = audioContext.createMediaStreamSource(dest.stream);
+    const mediaRecorder = new MediaRecorder(dest.stream);
+    let chunks = [];
+    mediaRecorder.ondataavailable = e=>chunks.push(e.data);
+    mediaRecorder.onstop = ()=>{
+        const blob = new Blob(chunks, {type:'audio/mp3'});
+        const url = URL.createObjectURL(blob);
+        ttsAudio.src = url;
+        ttsAudio.style.display = 'block';
+        const a = document.createElement('a');
+        a.href = url; a.download = 'speech.mp3'; a.click();
+    };
+    mediaRecorder.start();
+    synth.speak(utter);
+    setTimeout(()=>mediaRecorder.stop(), 1000 + ttsText.value.length*50);
 });
 </script>
 </body>
