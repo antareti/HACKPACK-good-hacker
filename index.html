@@ -40,16 +40,16 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 .error{color:var(--red);}
 .cursor{display:inline-block; width:7px; height:1.2em; background:#dcdcdc; margin-left:1px; animation:blink 1s steps(2) infinite;}
 @keyframes blink{50%{opacity:0}}
-.widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
-.widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
-#center-image{ width: 400px; height: 500px; background-image: url('wtugmetswajd1.gif'); background-size: contain; background-repeat: no-repeat; background-position: center; margin: 16px auto;}
-#cortana-face{ width:220px; height:220px; border-radius:50%; box-shadow:var(--shadow); background-image: url('cortana.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite; position: absolute; top: 16px; right: 16px;}
+.widget input, .widget button, .widget select, .widget textarea{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
+.widget input:focus, .widget button:focus, .widget select:focus, .widget textarea:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
+#center-image{ width: 400px; height: 500px; background-image: url('wtugmetswajd1.gif'); background-size: contain; background-repeat: no-repeat; background-position: center; margin: 16px auto; }
+#cortana-face{ width:220px; height:220px; border-radius:50%; box-shadow:var(--shadow); background-image: url('cortana.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite; position: absolute; top: 16px; right: 16px; }
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
 .progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
-footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent); margin-top: 20px;}
-.matrix-container { display: flex; justify-content: center; margin-top: 10px;}
-.matrix-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 4px; box-shadow: 0 0 5px var(--fg);}
+footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent); margin-top: 20px; }
+.matrix-container { display: flex; justify-content: center; margin-top: 10px; }
+.matrix-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 4px; box-shadow: 0 0 5px var(--fg); }
 </style>
 </head>
 <body>
@@ -90,20 +90,15 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <button id="b64-decode">Расшифровать</button>
         <div id="b64-output" style="margin-top:6px;"></div>
       </div>
-
-      <!-- Новый виджет: Генератор аудио -->
       <div class="widget">
-        <b>Генератор аудио (Text to MP3):</b><br>
+        <b>Генератор аудио (Text to Speech):</b><br>
         <textarea id="tts-text" placeholder="Введите текст..." rows="4" style="width:100%; margin-top:4px;"></textarea><br>
         <select id="tts-voice" style="margin-top:4px;">
           <option value="en-US">English (US)</option>
           <option value="en-GB">English (UK)</option>
         </select><br>
         <button id="tts-play" style="margin-top:4px;">▶️ Прослушать</button>
-        <button id="tts-download" style="margin-top:4px;">💾 Скачать MP3</button>
-        <audio id="tts-audio" controls style="margin-top:6px; width:100%; display:none;"></audio>
       </div>
-
       <div class="widget">
         <b>Прогресс:</b>
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
@@ -125,49 +120,58 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <div class="matrix-dot" style="background-color: var(--accent);"></div>
     </div>
 </footer>
+
 <script>
-// ... существующий JS код для CMD, генератора паролей, Base64 ...
+// Автозапуск аудио
+window.addEventListener('load',()=>{const audio=document.getElementById('bg-audio');audio.play().catch(()=>{});});
 
-// Генератор аудио (Text-to-MP3) без API
-const ttsText = document.getElementById('tts-text');
-const ttsVoice = document.getElementById('tts-voice');
-const ttsAudio = document.getElementById('tts-audio');
-const ttsPlay = document.getElementById('tts-play');
-const ttsDownload = document.getElementById('tts-download');
-
-ttsPlay.addEventListener('click', ()=>{
-    if(!ttsText.value) return alert("Введите текст для озвучки!");
-    const utter = new SpeechSynthesisUtterance(ttsText.value);
-    utter.lang = ttsVoice.value;
-    utter.onstart = ()=>{ ttsAudio.style.display='none'; };
-    speechSynthesis.speak(utter);
+// Переключение страниц
+const pages=document.querySelectorAll('.page');
+document.querySelectorAll('.nav button[data-page]').forEach(b=>{
+    b.addEventListener('click',()=>{
+        pages.forEach(p=>p.style.display='none');
+        document.getElementById(b.dataset.page).style.display='block';
+    });
 });
 
-ttsDownload.addEventListener('click', ()=>{
-    if(!ttsText.value) return alert("Введите текст для озвучки!");
-    // Используем MediaRecorder для записи озвучки
-    const audioContext = new AudioContext();
-    const dest = audioContext.createMediaStreamDestination();
-    const synth = window.speechSynthesis;
-    const utter = new SpeechSynthesisUtterance(ttsText.value);
-    utter.lang = ttsVoice.value;
+// CMD эмуляция (без изменений в логике)
+const cmd=document.getElementById('cmd'); const log=document.getElementById('cmd-log'); let buffer='', caret=0, history=[], historyIndex=-1, cmdCount=0; let path = localStorage.getItem('vfs-path') ? localStorage.getItem('vfs-path').split(',') : ['C:','Users','Guest']; let fs = JSON.parse(localStorage.getItem('vfs-fs')) || {'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}}; function saveState(){localStorage.setItem('vfs-path',path.join(','));localStorage.setItem('vfs-fs',JSON.stringify(fs));} function joinPath(){return path.join('\\');} function print(text='',type='normal'){ const d=document.createElement('div'); d.className='line'; if(type!=='normal') d.className+=' '+type; d.textContent=text; cmd.appendChild(d); cmd.scrollTop=cmd.scrollHeight; } function promptLine(){ const l=document.createElement('div'); l.className='line'; l.id='current-line'; l.innerHTML=`<span class="prompt">${joinPath()}</span>&gt; <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`; cmd.appendChild(l); renderBuffer(); cmd.scrollTop=cmd.scrollHeight; } function renderBuffer(){ document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret)); document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret)); }
 
-    const source = audioContext.createMediaStreamSource(dest.stream);
-    const mediaRecorder = new MediaRecorder(dest.stream);
-    let chunks = [];
-    mediaRecorder.ondataavailable = e=>chunks.push(e.data);
-    mediaRecorder.onstop = ()=>{
-        const blob = new Blob(chunks, {type:'audio/mp3'});
-        const url = URL.createObjectURL(blob);
-        ttsAudio.src = url;
-        ttsAudio.style.display = 'block';
-        const a = document.createElement('a');
-        a.href = url; a.download = 'speech.mp3'; a.click();
-    };
-    mediaRecorder.start();
-    synth.speak(utter);
-    setTimeout(()=>mediaRecorder.stop(), 1000 + ttsText.value.length*50);
+// Полноэкранный
+document.getElementById('btn-full')?.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
+// Копирование
+document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(cmd.innerText);});
+
+// Генератор паролей
+document.getElementById('gen-pw')?.addEventListener('click',()=>{
+    const len=parseInt(document.getElementById('pw-length').value)||12;
+    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
+    let pw=''; for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
+    document.getElementById('pw-output').textContent=pw;
 });
+document.getElementById('copy-pw')?.addEventListener('click',()=>{
+    const out=document.getElementById('pw-output'); if(out.textContent) navigator.clipboard.writeText(out.textContent);
+});
+
+// Base64
+document.getElementById('b64-encode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value; document.getElementById('b64-output').textContent=btoa(input);
+});
+document.getElementById('b64-decode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value; 
+    try{document.getElementById('b64-output').textContent=atob(input);} 
+    catch(e){document.getElementById('b64-output').textContent='Ошибка: неверные данные Base64';}
+});
+
+// Text-to-Speech
+document.getElementById('tts-play')?.addEventListener('click',()=>{
+    const txt=document.getElementById('tts-text').value;
+    if(!txt) return alert("Введите текст!");
+    const utter=new SpeechSynthesisUtterance(txt);
+    utter.lang=document.getElementById('tts-voice').value;
+    window.speechSynthesis.speak(utter);
+});
+
 </script>
 </body>
 </html>
