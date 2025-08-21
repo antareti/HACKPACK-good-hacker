@@ -90,7 +90,7 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <div id="b64-output" style="margin-top:6px;"></div>
       </div>
       <div class="widget">
-        <b>Генератор аудио (Text to Speech):</b><br>
+        <b>Text-to-Speech:</b><br>
         <textarea id="tts-text" placeholder="Введите текст..." rows="4" style="width:100%; margin-top:4px;"></textarea><br>
         <select id="tts-voice" style="margin-top:4px;">
           <option value="en-US">English (US)</option>
@@ -121,20 +121,40 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
 </footer>
 
 <script>
+// Звуковой сигнал через Web Audio API
+function playBeep(freq=440, duration=200){
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration/1000);
+}
+
 // Переключение страниц
 const pages=document.querySelectorAll('.page');
 document.querySelectorAll('.nav button[data-page]').forEach(b=>{
     b.addEventListener('click',()=>{
         pages.forEach(p=>p.style.display='none');
         document.getElementById(b.dataset.page).style.display='block';
+        playBeep(500,100); // звук при переключении
     });
 });
 
 // Полноэкранный
-document.getElementById('btn-full')?.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
+document.getElementById('btn-full')?.addEventListener('click',()=>{
+    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+    playBeep(700,150);
+});
 
 // Копирование
-document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('cmd').innerText);});
+document.getElementById('btn-copy')?.addEventListener('click',()=>{
+    navigator.clipboard.writeText(document.getElementById('cmd').innerText);
+    playBeep(600,120);
+});
 
 // Генератор паролей
 document.getElementById('gen-pw')?.addEventListener('click',()=>{
@@ -142,19 +162,23 @@ document.getElementById('gen-pw')?.addEventListener('click',()=>{
     const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
     let pw=''; for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
     document.getElementById('pw-output').textContent=pw;
+    playBeep(450,150);
 });
 document.getElementById('copy-pw')?.addEventListener('click',()=>{
     const out=document.getElementById('pw-output'); if(out.textContent) navigator.clipboard.writeText(out.textContent);
+    playBeep(450,150);
 });
 
 // Base64
 document.getElementById('b64-encode')?.addEventListener('click',()=>{
     const input=document.getElementById('b64-input').value; document.getElementById('b64-output').textContent=btoa(input);
+    playBeep(500,120);
 });
 document.getElementById('b64-decode')?.addEventListener('click',()=>{
     const input=document.getElementById('b64-input').value; 
     try{document.getElementById('b64-output').textContent=atob(input);} 
     catch(e){document.getElementById('b64-output').textContent='Ошибка: неверные данные Base64';}
+    playBeep(500,120);
 });
 
 // Text-to-Speech
@@ -164,7 +188,11 @@ document.getElementById('tts-play')?.addEventListener('click',()=>{
     const utter=new SpeechSynthesisUtterance(txt);
     utter.lang=document.getElementById('tts-voice').value;
     window.speechSynthesis.speak(utter);
+    playBeep(600,200);
 });
+
+// Авто-звук при загрузке
+window.addEventListener('load',()=>playBeep(400,200));
 </script>
 </body>
 </html>
