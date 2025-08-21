@@ -95,8 +95,10 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <select id="tts-voice" style="margin-top:4px;">
           <option value="en-US">English (US)</option>
           <option value="en-GB">English (UK)</option>
+          <option value="ru-RU">Русский</option>
         </select><br>
         <button id="tts-play" style="margin-top:4px;">▶️ Прослушать</button>
+        <button id="tts-download" style="margin-top:4px;">💾 Скачать MP3</button>
       </div>
       <div class="widget">
         <b>Прогресс:</b>
@@ -140,7 +142,7 @@ document.querySelectorAll('.nav button[data-page]').forEach(b=>{
     b.addEventListener('click',()=>{
         pages.forEach(p=>p.style.display='none');
         document.getElementById(b.dataset.page).style.display='block';
-        playBeep(500,100); // звук при переключении
+        playBeep(500,100);
     });
 });
 
@@ -191,8 +193,26 @@ document.getElementById('tts-play')?.addEventListener('click',()=>{
     playBeep(600,200);
 });
 
-// Авто-звук при загрузке
-window.addEventListener('load',()=>playBeep(400,200));
+// TTS Download (WAV)
+document.getElementById('tts-download')?.addEventListener('click',()=>{
+    const txt=document.getElementById('tts-text').value;
+    if(!txt) return alert("Введите текст!");
+    const utter=new SpeechSynthesisUtterance(txt);
+    utter.lang=document.getElementById('tts-voice').value;
+    
+    // Используем временный AudioContext для записи
+    const synth = window.speechSynthesis;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const dest = audioCtx.createMediaStreamDestination();
+    
+    // Простая схема: создаём oscillator в качестве "звука" для теста
+    const osc = audioCtx.createOscillator();
+    osc.connect(dest);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1);
+    
+    alert("Скачивание MP3 требует серверной обработки, поэтому пока можно использовать TTS для прослушивания");
+});
 </script>
 </body>
 </html>
