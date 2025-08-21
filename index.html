@@ -1,18 +1,90 @@
-<!-- Прогресс -->
-<div class="widget">
-  <b>Прогресс:</b>
-  <div class="console-progress" id="console-progress">
-    <div class="console-line">[INIT] Запуск модуля...</div>
-    <div class="console-line">[LOAD] Подключение систем...</div>
-    <div class="console-line">[RUN] Выполнение задачи...</div>
-    <div class="console-line">[OK] Успешно!</div>
-  </div>
-  <div class="progress-bar">
-    <div class="progress-bar-fill" id="progress-fill"></div>
-  </div>
-</div>
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HACKPACK GOOD HAKER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
+:root {
+    --accent: #FF4500;
+    --bg: #0b0b0f;
+    --bg-soft: #0f1117;
+    --fg: #e6e6e6;
+    --muted: #9aa4b2;
+    --glass: rgba(255,69,0,0.08);
+    --shadow: 0 10px 30px rgba(255,69,0,0.15), 0 2px 10px rgba(0,0,0,0.5);
+    --red: #FF6666;
+    --green: #66FF66;
+    --blue: #66B2FF;
+}
+*{box-sizing:border-box}
+body{margin:0; font-family:'JetBrains Mono', monospace; color:var(--fg); background:var(--bg);}
+a{text-decoration:none; color:var(--fg);}
+header{display:flex; justify-content:space-between; align-items:center; padding:16px 32px; background:var(--bg-soft); border-bottom:1px solid var(--accent);}
+.logo{font-weight:800; font-size:1.5rem; color:var(--accent);}
+.nav{display:flex; gap:16px;}
+.btn{padding:8px 12px; background:var(--glass); border:1px solid var(--accent); border-radius:8px; cursor:pointer; transition:all 0.2s;}
+.btn:hover{background:var(--accent); color:var(--bg-soft);}
+main{display:grid; grid-template-columns:2fr 1fr; gap:16px; padding:16px;}
+section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-shadow:var(--shadow);}
+#home { display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; }
+.widgets{display:grid; gap:12px;}
+.widget{background:var(--bg); padding:12px; border-radius:12px; box-shadow:var(--shadow);}
+.cmd-wrap{background:#000; color:#dcdcdc; border-radius:12px; padding:12px; height:400px; overflow:auto; font-size:14px;}
+.line{white-space:pre-wrap; font-family:'JetBrains Mono', monospace;}
+.prompt{color:var(--muted);}
+.path{color:var(--blue);}
+.success{color:var(--green);}
+.error{color:var(--red);}
+.cursor{display:inline-block; width:7px; height:1.2em; background:#dcdcdc; margin-left:1px; animation:blink 1s steps(2) infinite;}
+@keyframes blink{50%{opacity:0}}
+.widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
+.widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
+#center-image{
+    width: 400px;
+    height: 500px;
+    background-image: url('wtugmetswajd1.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 16px auto;
+}
+#cortana-face{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    box-shadow:var(--shadow);
+    background-image: url('cortana.gif');
+    background-size:cover;
+    background-position:center;
+    animation:float 3s ease-in-out infinite;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid var(--accent);
+    margin-top: 20px;
+}
+.matrix-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.matrix-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 4px;
+    box-shadow: 0 0 5px var(--fg);
+}
+
+/* Хакерский прогресс */
 .console-progress {
     background: #000;
     color: #0f0;
@@ -52,9 +124,171 @@
     100% { background-position: 200% 0; }
 }
 </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">HACKPACK GOOD HAKER</div>
+  <div class="nav">
+    <button class="btn" data-page="home">Главная</button>
+    <button class="btn" data-page="widgets">Виджеты</button>
+    <button class="btn" id="btn-full">Полноэкранный</button>
+    <button class="btn" id="btn-copy">Копировать</button>
+  </div>
+</header>
+
+<main>
+  <section class="page" id="home">
+    <h2>Главная страница</h2>
+    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
+    <div id="center-image"></div>
+    <div id="cortana-face"></div>
+  </section>
+
+  <section class="page" id="widgets" style="display:none;">
+    <h2>Виджеты</h2>
+    <div class="widgets">
+      <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
+      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
+      <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
+      
+      <!-- Генератор паролей -->
+      <div class="widget">
+        <b>Генератор паролей:</b><br>
+        <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
+        <button id="gen-pw">Сгенерировать</button>
+        <button id="copy-pw">Скопировать</button>
+        <div id="pw-output" style="margin-top:6px;"></div>
+      </div>
+      
+      <!-- Base64 -->
+      <div class="widget">
+        <b>Шифрование Base64:</b><br>
+        <input type="text" id="b64-input" placeholder="Введите текст">
+        <button id="b64-encode">Зашифровать</button>
+        <button id="b64-decode">Расшифровать</button>
+        <div id="b64-output" style="margin-top:6px;"></div>
+      </div>
+
+      <!-- Text-to-Speech -->
+      <div class="widget">
+        <b>Text-to-Speech:</b><br>
+        <textarea id="tts-text" placeholder="Введите текст" style="width:100%;height:60px;margin-top:6px;"></textarea><br>
+        <button id="tts-play">Прослушать</button>
+        <button id="tts-download">Скачать MP3</button>
+        <audio id="tts-audio" controls style="margin-top:6px;width:100%;"></audio>
+      </div>
+
+      <!-- Прогресс -->
+      <div class="widget">
+        <b>Прогресс:</b>
+        <div class="console-progress" id="console-progress">
+          <div class="console-line">[INIT] Запуск модуля...</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cmd-wrap" id="cmd" tabindex="0"></div>
+  </section>
+</main>
+
+<footer>
+    <div class="matrix-container">
+        <div class="matrix-dot" style="background-color: var(--accent);"></div>
+        <div class="matrix-dot" style="background-color: var(--green);"></div>
+        <div class="matrix-dot" style="background-color: var(--blue);"></div>
+        <div class="matrix-dot" style="background-color: var(--fg);"></div>
+        <div class="matrix-dot" style="background-color: var(--accent);"></div>
+    </div>
+</footer>
 
 <script>
-// Анимация прогресса
+// Страница
+const pages=document.querySelectorAll('.page');
+document.querySelectorAll('.nav button[data-page]').forEach(b=>{
+    b.addEventListener('click',()=>{
+        pages.forEach(p=>p.style.display='none');
+        document.getElementById(b.dataset.page).style.display='block';
+    });
+});
+
+// Полноэкранный
+document.getElementById('btn-full')?.addEventListener('click',()=>{
+    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+});
+
+// Копировать консоль
+document.getElementById('btn-copy')?.addEventListener('click',()=>{
+    const cmd=document.getElementById('cmd');
+    if(cmd) navigator.clipboard.writeText(cmd.innerText);
+});
+
+// Генератор паролей
+document.getElementById('gen-pw')?.addEventListener('click',()=>{
+    const len=parseInt(document.getElementById('pw-length').value)||12;
+    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
+    let pw=''; for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
+    document.getElementById('pw-output').textContent=pw;
+});
+document.getElementById('copy-pw')?.addEventListener('click',()=>{
+    const out=document.getElementById('pw-output');
+    if(out.textContent) navigator.clipboard.writeText(out.textContent);
+});
+
+// Base64
+document.getElementById('b64-encode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value;
+    document.getElementById('b64-output').textContent=btoa(input);
+});
+document.getElementById('b64-decode')?.addEventListener('click',()=>{
+    const input=document.getElementById('b64-input').value;
+    const output=document.getElementById('b64-output');
+    try{ output.textContent=atob(input); } catch(e){ output.textContent='Ошибка: неверные данные Base64'; }
+});
+
+// Text-to-Speech
+let ttsChunks = [];
+document.getElementById('tts-play').addEventListener('click',()=>{
+    const text = document.getElementById('tts-text').value;
+    if(!text) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ru-RU';
+    window.speechSynthesis.speak(utter);
+});
+
+document.getElementById('tts-download').addEventListener('click',()=>{
+    const text = document.getElementById('tts-text').value;
+    if(!text) return alert('Введите текст для TTS');
+    
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ru-RU';
+    
+    const synth = window.speechSynthesis;
+    const audioChunks = [];
+    
+    const streamDest = new MediaStreamAudioDestinationNode(new AudioContext());
+    const mediaRecorder = new MediaRecorder(streamDest.stream);
+    
+    mediaRecorder.ondataavailable = e => {
+        audioChunks.push(e.data);
+    };
+    mediaRecorder.onstop = e => {
+        const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tts.mp3';
+        a.click();
+    };
+    
+    mediaRecorder.start();
+    synth.speak(utter);
+    utter.onend = ()=>mediaRecorder.stop();
+});
+
+// Хакерский прогресс
 let progress = 0;
 const bar = document.getElementById('progress-fill');
 const consoleBox = document.getElementById('console-progress');
@@ -89,6 +323,8 @@ function fakeProgress() {
   }
 }
 
-// Запуск авто-прогресса
 setTimeout(fakeProgress, 1000);
 </script>
+
+</body>
+</html>
