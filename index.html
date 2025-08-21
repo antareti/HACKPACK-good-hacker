@@ -40,19 +40,55 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 .error{color:var(--red);}
 .cursor{display:inline-block; width:7px; height:1.2em; background:#dcdcdc; margin-left:1px; animation:blink 1s steps(2) infinite;}
 @keyframes blink{50%{opacity:0}}
-.widget input, .widget button, .widget select, .widget textarea{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
-.widget input:focus, .widget button:focus, .widget select:focus, .widget textarea:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
-#center-image{ width: 400px; height: 500px; background-image: url('wtugmetswajd1.gif'); background-size: contain; background-repeat: no-repeat; background-position: center; margin: 16px auto; }
-#cortana-face{ width:220px; height:220px; border-radius:50%; box-shadow:var(--shadow); background-image: url('cortana.gif'); background-size:cover; background-position:center; animation:float 3s ease-in-out infinite; position: absolute; top: 16px; right: 16px; }
+.widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
+.widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
+#center-image{
+    width: 400px;
+    height: 500px;
+    background-image: url('wtugmetswajd1.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 16px auto;
+}
+#cortana-face{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    box-shadow:var(--shadow);
+    background-image: url('cortana.gif');
+    background-size:cover;
+    background-position:center;
+    animation:float 3s ease-in-out infinite;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .progress-bar{height:10px; background:var(--bg-soft); border-radius:5px; overflow:hidden; margin-top:8px;}
 .progress-bar-fill{height:100%; width:0; background:var(--green); transition:width 0.5s ease-in-out;}
-footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent); margin-top: 20px; }
-.matrix-container { display: flex; justify-content: center; margin-top: 10px; }
-.matrix-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 4px; box-shadow: 0 0 5px var(--fg); }
+footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid var(--accent);
+    margin-top: 20px;
+}
+.matrix-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.matrix-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 4px;
+    box-shadow: 0 0 5px var(--fg);
+}
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo">HACKPACK GOOD HAKER</div>
   <div class="nav">
@@ -62,6 +98,7 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
     <button class="btn" id="btn-copy">Копировать</button>
   </div>
 </header>
+
 <main>
   <section class="page" id="home">
     <h2>Главная страница</h2>
@@ -69,12 +106,15 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
     <div id="center-image"></div>
     <div id="cortana-face"></div>
   </section>
+
   <section class="page" id="widgets" style="display:none;">
     <h2>Виджеты</h2>
     <div class="widgets">
       <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
       <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
       <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
+      
+      <!-- Генератор паролей -->
       <div class="widget">
         <b>Генератор паролей:</b><br>
         <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
@@ -82,6 +122,8 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <button id="copy-pw">Скопировать</button>
         <div id="pw-output" style="margin-top:6px;"></div>
       </div>
+      
+      <!-- Base64 -->
       <div class="widget">
         <b>Шифрование Base64:</b><br>
         <input type="text" id="b64-input" placeholder="Введите текст">
@@ -89,17 +131,16 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
         <button id="b64-decode">Расшифровать</button>
         <div id="b64-output" style="margin-top:6px;"></div>
       </div>
+
+      <!-- Text-to-Speech -->
       <div class="widget">
         <b>Text-to-Speech:</b><br>
-        <textarea id="tts-text" placeholder="Введите текст..." rows="4" style="width:100%; margin-top:4px;"></textarea><br>
-        <select id="tts-voice" style="margin-top:4px;">
-          <option value="en-US">English (US)</option>
-          <option value="en-GB">English (UK)</option>
-          <option value="ru-RU">Русский</option>
-        </select><br>
-        <button id="tts-play" style="margin-top:4px;">▶️ Прослушать</button>
-        <button id="tts-download" style="margin-top:4px;">💾 Скачать MP3</button>
+        <textarea id="tts-text" placeholder="Введите текст" style="width:100%;height:60px;margin-top:6px;"></textarea><br>
+        <button id="tts-play">Прослушать</button>
+        <button id="tts-download">Скачать MP3</button>
+        <audio id="tts-audio" controls style="margin-top:6px;width:100%;"></audio>
       </div>
+
       <div class="widget">
         <b>Прогресс:</b>
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
@@ -108,12 +149,9 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
     <div class="cmd-wrap" id="cmd" tabindex="0"></div>
   </section>
 </main>
+
 <footer>
     <div class="matrix-container">
-        <div class="matrix-dot" style="background-color: var(--accent);"></div>
-        <div class="matrix-dot" style="background-color: var(--green);"></div>
-        <div class="matrix-dot" style="background-color: var(--blue);"></div>
-        <div class="matrix-dot" style="background-color: var(--fg);"></div>
         <div class="matrix-dot" style="background-color: var(--accent);"></div>
         <div class="matrix-dot" style="background-color: var(--green);"></div>
         <div class="matrix-dot" style="background-color: var(--blue);"></div>
@@ -123,39 +161,24 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
 </footer>
 
 <script>
-// Звуковой сигнал через Web Audio API
-function playBeep(freq=440, duration=200){
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.frequency.value = freq;
-    osc.type = 'sine';
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + duration/1000);
-}
-
-// Переключение страниц
+// Страница
 const pages=document.querySelectorAll('.page');
 document.querySelectorAll('.nav button[data-page]').forEach(b=>{
     b.addEventListener('click',()=>{
         pages.forEach(p=>p.style.display='none');
         document.getElementById(b.dataset.page).style.display='block';
-        playBeep(500,100);
     });
 });
 
 // Полноэкранный
 document.getElementById('btn-full')?.addEventListener('click',()=>{
     document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
-    playBeep(700,150);
 });
 
-// Копирование
+// Копировать консоль
 document.getElementById('btn-copy')?.addEventListener('click',()=>{
-    navigator.clipboard.writeText(document.getElementById('cmd').innerText);
-    playBeep(600,120);
+    const cmd=document.getElementById('cmd');
+    if(cmd) navigator.clipboard.writeText(cmd.innerText);
 });
 
 // Генератор паролей
@@ -164,55 +187,65 @@ document.getElementById('gen-pw')?.addEventListener('click',()=>{
     const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
     let pw=''; for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
     document.getElementById('pw-output').textContent=pw;
-    playBeep(450,150);
 });
 document.getElementById('copy-pw')?.addEventListener('click',()=>{
-    const out=document.getElementById('pw-output'); if(out.textContent) navigator.clipboard.writeText(out.textContent);
-    playBeep(450,150);
+    const out=document.getElementById('pw-output');
+    if(out.textContent) navigator.clipboard.writeText(out.textContent);
 });
 
 // Base64
 document.getElementById('b64-encode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value; document.getElementById('b64-output').textContent=btoa(input);
-    playBeep(500,120);
+    const input=document.getElementById('b64-input').value;
+    document.getElementById('b64-output').textContent=btoa(input);
 });
 document.getElementById('b64-decode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value; 
-    try{document.getElementById('b64-output').textContent=atob(input);} 
-    catch(e){document.getElementById('b64-output').textContent='Ошибка: неверные данные Base64';}
-    playBeep(500,120);
+    const input=document.getElementById('b64-input').value;
+    const output=document.getElementById('b64-output');
+    try{ output.textContent=atob(input); } catch(e){ output.textContent='Ошибка: неверные данные Base64'; }
 });
 
 // Text-to-Speech
-document.getElementById('tts-play')?.addEventListener('click',()=>{
-    const txt=document.getElementById('tts-text').value;
-    if(!txt) return alert("Введите текст!");
-    const utter=new SpeechSynthesisUtterance(txt);
-    utter.lang=document.getElementById('tts-voice').value;
+let ttsChunks = [];
+document.getElementById('tts-play').addEventListener('click',()=>{
+    const text = document.getElementById('tts-text').value;
+    if(!text) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ru-RU';
     window.speechSynthesis.speak(utter);
-    playBeep(600,200);
 });
 
-// TTS Download (WAV)
-document.getElementById('tts-download')?.addEventListener('click',()=>{
-    const txt=document.getElementById('tts-text').value;
-    if(!txt) return alert("Введите текст!");
-    const utter=new SpeechSynthesisUtterance(txt);
-    utter.lang=document.getElementById('tts-voice').value;
+document.getElementById('tts-download').addEventListener('click',()=>{
+    const text = document.getElementById('tts-text').value;
+    if(!text) return alert('Введите текст для TTS');
     
-    // Используем временный AudioContext для записи
+    // Создаем синтез речи через AudioContext
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ru-RU';
+    
     const synth = window.speechSynthesis;
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const dest = audioCtx.createMediaStreamDestination();
+    const audioChunks = [];
     
-    // Простая схема: создаём oscillator в качестве "звука" для теста
-    const osc = audioCtx.createOscillator();
-    osc.connect(dest);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 1);
+    // Используем MediaRecorder
+    const streamDest = new MediaStreamAudioDestinationNode(new AudioContext());
+    const mediaRecorder = new MediaRecorder(streamDest.stream);
     
-    alert("Скачивание MP3 требует серверной обработки, поэтому пока можно использовать TTS для прослушивания");
+    mediaRecorder.ondataavailable = e => {
+        audioChunks.push(e.data);
+    };
+    mediaRecorder.onstop = e => {
+        const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tts.mp3';
+        a.click();
+    };
+    
+    mediaRecorder.start();
+    synth.speak(utter);
+    utter.onend = ()=>mediaRecorder.stop();
 });
 </script>
+
 </body>
 </html>
