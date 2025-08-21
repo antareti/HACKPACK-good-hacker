@@ -53,7 +53,6 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
 </style>
 </head>
 <body>
-<audio id="bg-audio" autoplay loop><source src="1.mp3" type="audio/mpeg"></audio>
 <header>
   <div class="logo">HACKPACK GOOD HAKER</div>
   <div class="nav">
@@ -122,9 +121,6 @@ footer { padding: 20px; text-align: center; border-top: 1px solid var(--accent);
 </footer>
 
 <script>
-// Автозапуск аудио
-window.addEventListener('load',()=>{const audio=document.getElementById('bg-audio');audio.play().catch(()=>{});});
-
 // Переключение страниц
 const pages=document.querySelectorAll('.page');
 document.querySelectorAll('.nav button[data-page]').forEach(b=>{
@@ -134,13 +130,11 @@ document.querySelectorAll('.nav button[data-page]').forEach(b=>{
     });
 });
 
-// CMD эмуляция (без изменений в логике)
-const cmd=document.getElementById('cmd'); const log=document.getElementById('cmd-log'); let buffer='', caret=0, history=[], historyIndex=-1, cmdCount=0; let path = localStorage.getItem('vfs-path') ? localStorage.getItem('vfs-path').split(',') : ['C:','Users','Guest']; let fs = JSON.parse(localStorage.getItem('vfs-fs')) || {'C:':{'Users':{'Guest':{'readme.txt':'HACKPACK GOOD HAKER\nVersion 1.0'}}}}; function saveState(){localStorage.setItem('vfs-path',path.join(','));localStorage.setItem('vfs-fs',JSON.stringify(fs));} function joinPath(){return path.join('\\');} function print(text='',type='normal'){ const d=document.createElement('div'); d.className='line'; if(type!=='normal') d.className+=' '+type; d.textContent=text; cmd.appendChild(d); cmd.scrollTop=cmd.scrollHeight; } function promptLine(){ const l=document.createElement('div'); l.className='line'; l.id='current-line'; l.innerHTML=`<span class="prompt">${joinPath()}</span>&gt; <span id="buf-left"></span><span class="cursor"></span><span id="buf-right"></span>`; cmd.appendChild(l); renderBuffer(); cmd.scrollTop=cmd.scrollHeight; } function renderBuffer(){ document.getElementById('buf-left')&&(document.getElementById('buf-left').textContent=buffer.slice(0,caret)); document.getElementById('buf-right')&&(document.getElementById('buf-right').textContent=buffer.slice(caret)); }
-
 // Полноэкранный
 document.getElementById('btn-full')?.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
+
 // Копирование
-document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(cmd.innerText);});
+document.getElementById('btn-copy')?.addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('cmd').innerText);});
 
 // Генератор паролей
 document.getElementById('gen-pw')?.addEventListener('click',()=>{
@@ -171,7 +165,6 @@ document.getElementById('tts-play')?.addEventListener('click',()=>{
     utter.lang=document.getElementById('tts-voice').value;
     window.speechSynthesis.speak(utter);
 });
-
 </script>
 </body>
 </html>
