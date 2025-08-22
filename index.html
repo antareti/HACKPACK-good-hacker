@@ -20,22 +20,10 @@
     --blue: #66B2FF;
 }
 *{box-sizing:border-box}
-body{
-    margin:0;
-    font-family:'JetBrains Mono', monospace;
-    color:var(--fg);
-    background:var(--bg);
-    /* >>> единственное изменение: шрифт жирнее и чуть больше <<< */
-    font-weight:700;
-    font-size:1.06rem;
-}
+body{margin:0; font-family:'JetBrains Mono', monospace; color:var(--fg); background:var(--bg);}
 a{text-decoration:none; color:var(--fg);}
 header{display:flex; justify-content:space-between; align-items:center; padding:16px 32px; background:var(--bg-soft); border-bottom:1px solid var(--accent);}
-.logo{
-    font-weight:800;
-    font-size:1.6rem; /* логотип немного крупнее */
-    color:var(--accent);
-}
+.logo{font-weight:800; font-size:1.5rem; color:var(--accent);}
 .nav{display:flex; gap:16px;}
 .btn{padding:8px 12px; background:var(--glass); border:1px solid var(--accent); border-radius:8px; cursor:pointer; transition:all 0.2s;}
 .btn:hover{background:var(--accent); color:var(--bg-soft);}
@@ -54,93 +42,40 @@ section.page{background:var(--bg-soft); padding:16px; border-radius:12px; box-sh
 @keyframes blink{50%{opacity:0}}
 .widget input, .widget button, .widget select{padding:6px 10px; margin-top:6px; border-radius:6px; border:1px solid var(--accent); background:var(--glass); color:var(--fg);}
 .widget input:focus, .widget button:focus, .widget select:focus{outline:none; box-shadow:0 0 0 2px var(--accent);}
-#center-image{
-    width: 400px;
-    height: 500px;
-    background-image: url('wtugmetswajd1.gif');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin: 16px auto;
-}
-#cortana-face{
-    width:220px;
-    height:220px;
-    border-radius:50%;
-    box-shadow:var(--shadow);
-    background-image: url('cortana.gif');
-    background-size:cover;
-    background-position:center;
-    animation:float 3s ease-in-out infinite;
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
+#center-image{width: 400px;height: 500px;background-image: url('wtugmetswajd1.gif');background-size: contain;background-repeat: no-repeat;background-position: center;margin: 16px auto;}
+#cortana-face{width:220px;height:220px;border-radius:50%;box-shadow:var(--shadow);background-image: url('cortana.gif');background-size:cover;background-position:center;animation:float 3s ease-in-out infinite;position: absolute;top: 16px;right: 16px;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-footer {
-    padding: 20px;
-    text-align: center;
-    border-top: 1px solid var(--accent);
-    margin-top: 20px;
-}
-.matrix-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-}
-.matrix-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 0 4px;
-    box-shadow: 0 0 5px var(--fg);
-}
+footer {padding: 20px;text-align: center;border-top: 1px solid var(--accent);margin-top: 20px;}
+.matrix-container {display: flex;justify-content: center;margin-top: 10px;}
+.matrix-dot {width: 8px;height: 8px;border-radius: 50%;margin: 0 4px;box-shadow: 0 0 5px var(--fg);}
+.console-progress {background: #000;color: #0f0;font-family: 'JetBrains Mono', monospace;padding: 10px;border-radius: 8px;height: 120px;overflow-y: auto;font-size: 13px;box-shadow: inset 0 0 10px #0f0;}
+.console-line {white-space: pre-wrap;margin-bottom: 4px;}
+.console-line::before {content: "> ";color: var(--accent);}
+.progress-bar {height: 12px;background: #111;border-radius: 6px;overflow: hidden;margin-top: 10px;box-shadow: inset 0 0 6px #0f0;}
+.progress-bar-fill {height: 100%;width: 0;background: linear-gradient(90deg, #0f0, #33ff33, #0f0);background-size: 200% 100%;animation: scan 2s linear infinite;}
+@keyframes scan {0% { background-position: 0 0; }100% { background-position: 200% 0; }}
 
-/* Хакерский прогресс */
-.console-progress {
-    background: #000;
-    color: #0f0;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 10px;
-    border-radius: 8px;
-    height: 120px;
-    overflow-y: auto;
-    font-size: 13px;
-    box-shadow: inset 0 0 10px #0f0;
-}
-.console-line {
-    white-space: pre-wrap;
-    margin-bottom: 4px;
-}
-.console-line::before {
-    content: "> ";
-    color: var(--accent);
-}
-.progress-bar {
-    height: 12px;
-    background: #111;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 10px;
-    box-shadow: inset 0 0 6px #0f0;
-}
-.progress-bar-fill {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, #0f0, #33ff33, #0f0);
-    background-size: 200% 100%;
-    animation: scan 2s linear infinite;
-}
-@keyframes scan {
-    0% { background-position: 0 0; }
-    100% { background-position: 200% 0; }
-}
+/* === старый зеленый стиль консоли + гаджеты === */
+.console-old {width: 90%;max-width: 1000px;margin: 20px auto;background: rgba(0, 0, 0, 0.85);padding: 20px;border-radius: 10px;box-shadow: 0 0 15px #0f0;color:#0f0;font-weight:bold;}
+.progress-old {background: #111;border: 1px solid #0f0;height: 20px;border-radius: 5px;overflow: hidden;margin: 10px 0;}
+.progress-old .progress-bar {background: linear-gradient(90deg, #0f0, #090);width: 0%;height: 100%;animation: load 5s infinite;}
+@keyframes load {0% { width: 0%; }50% { width: 100%; }100% { width: 0%; }}
+.gadgets {display: grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));gap: 15px;margin-top: 30px;}
+.gadgets .widget {background: #050;padding: 15px;border-radius: 10px;box-shadow: 0 0 10px #0f0;color:#0f0;}
+.gadgets .widget h2 {font-size: 20px;margin: 0 0 10px;text-align: center;}
+.cpu-bar {width: 100%;height: 15px;background: #111;border: 1px solid #0f0;border-radius: 5px;overflow: hidden;position: relative;}
+.cpu-bar span {display: block;height: 100%;background: linear-gradient(90deg, #0f0, #090);width: 50%;animation: cpuMove 3s infinite alternate;}
+@keyframes cpuMove {from { width: 20%; }to { width: 95%; }}
+.scanner {font-size: 14px;height: 80px;overflow: hidden;position: relative;}
+.scanner p {margin: 0;animation: scan 5s linear infinite;}
+.status {text-align: center;font-size: 18px;color: #0f0;animation: blink 1s infinite;}
+@keyframes blink {50% { color: #090; }}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">ᵥₕₐ𝒸ₖₚₐ𝒸ₖ gₒₒd ₕₐₖₑᵣ</div>
+  <div class="logo">HACKPACK GOOD HAKER</div>
   <div class="nav">
     <button class="btn" data-page="home">Главная</button>
     <button class="btn" data-page="widgets">Виджеты</button>
@@ -152,7 +87,7 @@ footer {
 <main>
   <section class="page" id="home">
     <h2>Главная страница</h2>
-    <p>Добро пожаловать в HACKPACK GOOD HAKER! Здесь вы можете работать с консолью, просматривать виджеты и управлять виртуальной файловой системой.</p>
+    <p>Добро пожаловать в HACKPACK GOOD HAKER!</p>
     <div id="center-image"></div>
     <div id="cortana-face"></div>
   </section>
@@ -161,182 +96,58 @@ footer {
     <h2>Виджеты</h2>
     <div class="widgets">
       <div class="widget"><b>Системная информация:</b><br>OS: Win-10<br>Версия: 1.0</div>
-      <div class="widget"><b>Последние команды:</b><div id="cmd-log" style="margin-top:8px;"></div></div>
+      <div class="widget"><b>Последние команды:</b><div id="cmd-log"></div></div>
       <div class="widget"><b>Статистика:</b><br>Команд введено: <span id="cmd-count">0</span></div>
-      
-      <!-- Генератор паролей -->
-      <div class="widget">
-        <b>Генератор паролей:</b><br>
-        <input type="number" id="pw-length" placeholder="Длина" value="12" min="4" max="32">
-        <button id="gen-pw">Сгенерировать</button>
-        <button id="copy-pw">Скопировать</button>
-        <div id="pw-output" style="margin-top:6px;"></div>
-      </div>
-      
-      <!-- Base64 -->
-      <div class="widget">
-        <b>Шифрование Base64:</b><br>
-        <input type="text" id="b64-input" placeholder="Введите текст">
-        <button id="b64-encode">Зашифровать</button>
-        <button id="b64-decode">Расшифровать</button>
-        <div id="b64-output" style="margin-top:6px;"></div>
-      </div>
-
-      <!-- Text-to-Speech -->
-      <div class="widget">
-        <b>Text-to-Speech:</b><br>
-        <textarea id="tts-text" placeholder="Введите текст" style="width:100%;height:60px;margin-top:6px;"></textarea><br>
-        <button id="tts-play">Прослушать</button>
-        <button id="tts-download">Скачать MP3</button>
-        <audio id="tts-audio" controls style="margin-top:6px;width:100%;"></audio>
-      </div>
-
-      <!-- Прогресс -->
-      <div class="widget">
-        <b>Прогресс:</b>
-        <div class="console-progress" id="console-progress">
-          <div class="console-line">[INIT] Запуск модуля...</div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar-fill" id="progress-fill"></div>
-        </div>
-      </div>
+      <div class="widget"><b>Генератор паролей:</b><br><input type="number" id="pw-length" value="12"><button id="gen-pw">Сгенерировать</button><button id="copy-pw">Скопировать</button><div id="pw-output"></div></div>
+      <div class="widget"><b>Шифрование Base64:</b><br><input type="text" id="b64-input"><button id="b64-encode">Зашифровать</button><button id="b64-decode">Расшифровать</button><div id="b64-output"></div></div>
+      <div class="widget"><b>Text-to-Speech:</b><br><textarea id="tts-text"></textarea><br><button id="tts-play">Прослушать</button><button id="tts-download">Скачать MP3</button><audio id="tts-audio" controls></audio></div>
+      <div class="widget"><b>Прогресс:</b><div class="console-progress" id="console-progress"><div class="console-line">[INIT] Запуск модуля...</div></div><div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div></div>
     </div>
     <div class="cmd-wrap" id="cmd" tabindex="0"></div>
   </section>
 </main>
 
+<!-- СТАРЫЙ БЛОК КОНСОЛИ С ГАДЖЕТАМИ -->
+<div class="console-old">
+  <p>Запуск системы...</p>
+  <div class="progress-old"><div class="progress-bar"></div></div>
+  <p>Все системы активны ✅</p>
+  <div class="gadgets">
+    <div class="widget"><h2>CPU Load</h2><div class="cpu-bar"><span></span></div></div>
+    <div class="widget"><h2>Network Scanner</h2><div class="scanner"><p>[192.168.0.1] ✔</p><p>[192.168.0.23] ✔</p><p>[10.0.0.15] ✖</p></div></div>
+    <div class="widget"><h2>Processes</h2><div class="scanner"><p>init.exe ... OK</p><p>kernel.sys ... OK</p><p>firewall.dll ... ACTIVE</p></div></div>
+    <div class="widget"><h2>Firewall</h2><div class="status">🟢 ACTIVE</div></div>
+  </div>
+</div>
+
 <footer>
-    <div class="matrix-container">
-        <div class="matrix-dot" style="background-color: var(--accent);"></div>
-        <div class="matrix-dot" style="background-color: var(--green);"></div>
-        <div class="matrix-dot" style="background-color: var(--blue);"></div>
-        <div class="matrix-dot" style="background-color: var(--fg);"></div>
-        <div class="matrix-dot" style="background-color: var(--accent);"></div>
-    </div>
+  <div class="matrix-container">
+    <div class="matrix-dot" style="background-color: var(--accent);"></div>
+    <div class="matrix-dot" style="background-color: var(--green);"></div>
+    <div class="matrix-dot" style="background-color: var(--blue);"></div>
+    <div class="matrix-dot" style="background-color: var(--fg);"></div>
+    <div class="matrix-dot" style="background-color: var(--accent);"></div>
+  </div>
 </footer>
 
 <script>
-// Страница
+// Навигация
 const pages=document.querySelectorAll('.page');
 document.querySelectorAll('.nav button[data-page]').forEach(b=>{
-    b.addEventListener('click',()=>{
-        pages.forEach(p=>p.style.display='none');
-        document.getElementById(b.dataset.page).style.display='block';
-    });
+  b.addEventListener('click',()=>{pages.forEach(p=>p.style.display='none');document.getElementById(b.dataset.page).style.display='block';});
 });
-
 // Полноэкранный
-document.getElementById('btn-full')?.addEventListener('click',()=>{
-    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
-});
-
-// Копировать консоль
-document.getElementById('btn-copy')?.addEventListener('click',()=>{
-    const cmd=document.getElementById('cmd');
-    if(cmd) navigator.clipboard.writeText(cmd.innerText);
-});
-
+document.getElementById('btn-full').addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();});
+// Копировать
+document.getElementById('btn-copy').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('cmd').innerText);});
 // Генератор паролей
-document.getElementById('gen-pw')?.addEventListener('click',()=>{
-    const len=parseInt(document.getElementById('pw-length').value)||12;
-    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
-    let pw=''; for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));
-    document.getElementById('pw-output').textContent=pw;
-});
-document.getElementById('copy-pw')?.addEventListener('click',()=>{
-    const out=document.getElementById('pw-output');
-    if(out.textContent) navigator.clipboard.writeText(out.textContent);
-});
-
+document.getElementById('gen-pw').addEventListener('click',()=>{const len=parseInt(document.getElementById('pw-length').value)||12;const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';let pw='';for(let i=0;i<len;i++) pw+=chars.charAt(Math.floor(Math.random()*chars.length));document.getElementById('pw-output').textContent=pw;});
+document.getElementById('copy-pw').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('pw-output').textContent);});
 // Base64
-document.getElementById('b64-encode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value;
-    document.getElementById('b64-output').textContent=btoa(input);
-});
-document.getElementById('b64-decode')?.addEventListener('click',()=>{
-    const input=document.getElementById('b64-input').value;
-    const output=document.getElementById('b64-output');
-    try{ output.textContent=atob(input); } catch(e){ output.textContent='Ошибка: неверные данные Base64'; }
-});
-
-// Text-to-Speech
-let ttsChunks = [];
-document.getElementById('tts-play').addEventListener('click',()=>{
-    const text = document.getElementById('tts-text').value;
-    if(!text) return;
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'ru-RU';
-    window.speechSynthesis.speak(utter);
-});
-
-document.getElementById('tts-download').addEventListener('click',()=>{
-    const text = document.getElementById('tts-text').value;
-    if(!text) return alert('Введите текст для TTS');
-    
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'ru-RU';
-    
-    const synth = window.speechSynthesis;
-    const audioChunks = [];
-    
-    const streamDest = new MediaStreamAudioDestinationNode(new AudioContext());
-    const mediaRecorder = new MediaRecorder(streamDest.stream);
-    
-    mediaRecorder.ondataavailable = e => {
-        audioChunks.push(e.data);
-    };
-    mediaRecorder.onstop = e => {
-        const blob = new Blob(audioChunks, { type: 'audio/mp3' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'tts.mp3';
-        a.click();
-    };
-    
-    mediaRecorder.start();
-    synth.speak(utter);
-    utter.onend = ()=>mediaRecorder.stop();
-});
-
-// Хакерский прогресс
-let progress = 0;
-const bar = document.getElementById('progress-fill');
-const consoleBox = document.getElementById('console-progress');
-
-function fakeProgress() {
-  if(progress >= 100) return;
-  progress += Math.floor(Math.random() * 10) + 5;
-  if(progress > 100) progress = 100;
-  bar.style.width = progress + "%";
-
-  const logs = [
-    "[SCAN] Проверка системных модулей...",
-    "[PROC] Запуск подпроцесса #" + Math.floor(Math.random()*999),
-    "[INFO] Подключение к виртуальной сети...",
-    "[AUTH] Авторизация завершена.",
-    "[SYNC] Синхронизация завершена.",
-    "[OK] Модуль успешно выполнен."
-  ];
-  const line = document.createElement("div");
-  line.className = "console-line";
-  line.textContent = logs[Math.floor(Math.random()*logs.length)];
-  consoleBox.appendChild(line);
-  consoleBox.scrollTop = consoleBox.scrollHeight;
-
-  if(progress < 100) {
-    setTimeout(fakeProgress, 800);
-  } else {
-    const done = document.createElement("div");
-    done.className = "console-line";
-    done.textContent = "[DONE] Все операции завершены.";
-    consoleBox.appendChild(done);
-  }
-}
-
-setTimeout(fakeProgress, 1000);
+document.getElementById('b64-encode').addEventListener('click',()=>{document.getElementById('b64-output').textContent=btoa(document.getElementById('b64-input').value);});
+document.getElementById('b64-decode').addEventListener('click',()=>{try{document.getElementById('b64-output').textContent=atob(document.getElementById('b64-input').value);}catch{document.getElementById('b64-output').textContent='Ошибка Base64';}});
+// TTS
+document.getElementById('tts-play').addEventListener('click',()=>{const text=document.getElementById('tts-text').value;if(text){const u=new SpeechSynthesisUtterance(text);u.lang='ru-RU';speechSynthesis.speak(u);}});
 </script>
-
 </body>
 </html>
